@@ -1,0 +1,13 @@
+pipelines:
+  branches:
+    UAT:
+      - step:
+          name: Deploy to Tarality v2 staging admin bnpl
+          script:
+            - echo "Deploying to UAT"
+            - pipe: atlassian/ssh-run:0.7.1
+              variables:
+                SSH_USER: $SSH_USER  
+                SERVER: $SERVER_IP
+                COMMAND: "bash /var/www/script/v2adminbnpl.tarality.sh"
+            - echo "Deployment complete."
