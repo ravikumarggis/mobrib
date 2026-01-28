@@ -23,7 +23,7 @@ const CommonTable = ({ tableData }: { tableData: any }) => {
     setIsDownloadCsv,
   } = tableData;
 
-  console.log(table, "tabletable");
+ 
 
   const TablePagination = useMemo(() => {
     return (

@@ -16,6 +16,12 @@ type FilterType = {
 };
 
 
+interface VerifiedOrRejectedUserPlayload {
+  _id: number;
+  status: string;
+ 
+}
+
 
 /************************************** Crypto Desposite Request List  **********************************/
 
@@ -23,7 +29,7 @@ type FilterType = {
 export const fetchUserList = async ( filter: FilterType) => {
   try {
     const response = await api({
-      url: `/admin/consultantList`,
+      url: `/admin/userList`,
       method: "GET",
       params: {
       
@@ -45,7 +51,7 @@ export const fetchUserList = async ( filter: FilterType) => {
 };
 export const useUserList = ( filter: FilterType) => {
   return useQuery({
-    queryKey: ["consultantList", filter],
+    queryKey: ["userList", filter],
     queryFn: () => fetchUserList( filter),
     select(data) {
       if (data?.data?.responseCode === 200) {
@@ -58,3 +64,31 @@ export const useUserList = ( filter: FilterType) => {
   });
 };
 
+
+
+const handleApproveRejectCrptoWithdraw = async (
+  data: VerifiedOrRejectedUserPlayload
+) => {
+  try {
+    const response = await api({
+      url: "/admin/blockDeleteUser",
+      method: "PUT",
+      data: data,
+    });
+    if (response?.data?.responseCode === 200) {
+      toast.success(response?.data?.responseMessage);
+
+      return response?.data;
+    }
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage);
+    return error?.response?.data;
+  }
+};
+
+export const useApproveRejectUserDetail = () => {
+  return useMutation({
+    mutationFn: (data: VerifiedOrRejectedUserPlayload) =>
+      handleApproveRejectCrptoWithdraw(data),
+  });
+}; // useApproveRejectUserDetail

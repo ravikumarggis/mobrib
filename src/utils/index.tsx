@@ -211,6 +211,8 @@ export const statusText = (type: string) => {
 
     case "TERMINATE":
       return "Terminated";
+    case "DELETE":
+      return "Delete";
 
     case "COMPLETED":
       return "Completed";
@@ -284,6 +286,12 @@ export const statusColor = (type: string) => {
 
     case "Active":
       return "text-green-500";
+
+    case "DELETED":
+      return "text-red-500";
+
+    case "Deleted":
+      return "text-red-500";
 
     case "Inactive":
       return "text-red-500";

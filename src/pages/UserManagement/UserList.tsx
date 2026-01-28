@@ -38,9 +38,10 @@ interface InrWithdrawListRowData {
   
     mobileNumber: string;
     status: string;
+    userStatus: string;
   createdAt: string;
   updatedAt: string;
-  userType: string;
+  role: string;
   Action: any;
 }
 
@@ -54,7 +55,7 @@ const UserList = () => {
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
   const { data, isLoading } = useUserList(debouncedFilter);
 
-  console.log(data,"datadatadata");
+
   
 
   const {
@@ -117,7 +118,7 @@ const UserList = () => {
       header: "Mobile No.",
       cell: (info) => info.getValue() || "--",
     }),
-    columnHelper.accessor("status", {
+    columnHelper.accessor("userStatus", {
       header: "Status",
       cell: (info) => {
         let value = info.getValue() || "--";
@@ -127,7 +128,7 @@ const UserList = () => {
       },
     }),
 
-    columnHelper.accessor("userType", {
+    columnHelper.accessor("role", {
       header: "User Type",
       cell: (info) => info.getValue() || "--",
     }),
@@ -136,23 +137,23 @@ const UserList = () => {
       cell: (info) => DateTimeFormates(info.getValue()),
     }),
 
-    // {
-    //   header: "Action",
-    //   id: "view",
-    //   cell: ({ row }: { row: any }) => {
-    //     return (
-    //       <Button
-    //         onClick={() => {
-    //           navigate(`/withdraw-view`, {
-    //             state: { withdrawDetail: row?.original },
-    //           });
-    //         }}
-    //       >
-    //         View
-    //       </Button>
-    //     );
-    //   },
-    // },
+    {
+      header: "Action",
+      id: "view",
+      cell: ({ row }: { row: any }) => {
+        return (
+          <Button
+            onClick={() => {
+              navigate(`/view-user`, {
+                state: { userDetail: row?.original                },
+              });
+            }}
+          >
+            View
+          </Button>
+        );
+      },
+    },
   ];
 
   const table = useReactTable({

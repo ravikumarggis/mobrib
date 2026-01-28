@@ -202,10 +202,10 @@ export default function SignInForm() {
                   OTP <span className="text-error-500">*</span>
                 </Label>
                 <Input
-                  max="4"
+                  max="6"
                   type="tel"
                   name="otp"
-                  length={4}
+                  length={6}
                   placeholder="Enter OTP"
                   value={formik.values.otp}
                   disabled={!showOtp}

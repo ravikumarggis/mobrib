@@ -30,8 +30,8 @@ const uploadImage = (formData: FormData) => {
 
 // Add category (image URL only)
 const addCategory = (data: {
-  categoryTitle: string;
-  categoryIcon: string;
+  categoryType: string;
+ 
 }) => {
   return api({
     url: "/admin/addCategory",
@@ -90,16 +90,16 @@ export default function AddCategory() {
   const formik = useFormik({
     initialValues: {
       title: "",
-      icon: "", 
+      
     },
     validationSchema: Yup.object({
       title: Yup.string().required("Category title is required"),
-      icon: Yup.string().required("Category icon is required"),
+     
     }),
     onSubmit: (values) => {
       addCategoryMutation.mutate({
-        categoryTitle: values.title,
-        categoryIcon: values.icon,
+        categoryType: values.title,
+       
       });
     },
   });
@@ -137,57 +137,7 @@ export default function AddCategory() {
             {/* =========================
                 CATEGORY ICON
             ========================= */}
-            <div>
-              <Label>
-                Category Icon <span className="text-error-500">*</span>
-              </Label>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const file = e.currentTarget.files?.[0];
-                  if (!file) return;
-
-                  // Validate file manually
-                  if (!file.type.startsWith("image/")) {
-                    toast.error("Only image files are allowed");
-                    return;
-                  }
-
-                  if (file.size > 1024 * 1024) {
-                    toast.error("Image must be less than 1MB");
-                    return;
-                  }
-
-                  const formData = new FormData();
-                  formData.append("file", file);
-
-                  uploadImageMutation.mutate(formData);
-                }}
-                className="block w-full text-sm text-gray-500
-                  file:mr-4 file:py-2 file:px-4
-                  file:rounded-md file:border-0
-                  file:text-sm file:font-semibold
-                  file:bg-primary-500 file:text-white
-                  hover:file:bg-primary-600"
-              />
-
-              {formik.touched.icon && formik.errors.icon && (
-                <p className="text-sm text-error-500 mt-1">
-                  {formik.errors.icon}
-                </p>
-              )}
-
-              {/* IMAGE PREVIEW */}
-              {formik.values.icon && (
-                <img
-                  src={formik.values.icon}
-                  alt="Preview"
-                  className="mt-3 h-20 w-20 object-cover rounded-md border"
-                />
-              )}
-            </div>
+          
 
             {/* =========================
                 SUBMIT BUTTON
@@ -197,11 +147,11 @@ export default function AddCategory() {
               className="w-full"
               size="sm"
               disabled={
-                uploadImageMutation.isPending ||
+               
                 addCategoryMutation.isPending
               }
               startIcon={
-                (uploadImageMutation.isPending ||
+                (
                   addCategoryMutation.isPending) && <NeonSpinner size="6" />
               }
             >

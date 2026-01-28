@@ -30,7 +30,7 @@ import { useCategoryList, useDeleteCategory } from "../../queries/category-mange
 interface InrWithdrawListRowData {
   id: string;
 
-  categoryTitle: string;
+  categoryType: string;
   email: string;
   categoryIcon: string;
   isNewUser: boolean;
@@ -79,10 +79,10 @@ const CategoryList = () => {
     return { tabledata, pages, WithCryptoInrCSVData };
   }, [data, WithdrawCryptoInrCSV]);
 
-  const handleDelete = (categoryTitle: string) => {
-    if (!categoryTitle) return;
+  const handleDelete = (categoryId: string) => {
+    if (!categoryId) return;
   
-    deleteCategory({ categoryTitle });
+    deleteCategory({ categoryId });
   };
   
   useEffect(() => {
@@ -106,34 +106,16 @@ const CategoryList = () => {
         return Pagination({ filter, table, row });
       },
     },
-    columnHelper.accessor("categoryTitle", {
+    columnHelper.accessor("categoryType", {
       header: "Category Title",
       cell: (info) => info.getValue() || "--",
     }),
-    columnHelper.accessor("categoryIcon", {
-      header: "Icon",
-      cell: (info) => {
-        const iconUrl = info.getValue();
+   
 
-        if (!iconUrl) return "--";
-
-        return (
-          <img
-            src={iconUrl}
-            alt="Category Icon"
-            className="h-10 w-10 object-contain rounded"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = "/placeholder.png";
-            }}
-          />
-        );
-      },
+    columnHelper.accessor("createdAt", {
+      header: "Date & Time",
+      cell: (info) => DateTimeFormates(info.getValue()),
     }),
-
-    // columnHelper.accessor("user.email", {
-    //   header: "Email",
-    //   cell: (info) => info.getValue() || "--",
-    // }),
 
     columnHelper.accessor("status", {
       header: "Status",
@@ -149,12 +131,12 @@ const CategoryList = () => {
       header: "Action",
       id: "delete",
       cell: ({ row }: { row: any }) => {
-        const categoryTitle = row.original.categoryTitle;
+        const categoryType = row.original._id;
     
         return (
           <Button
           className="bg-red-600 hover:bg-red-700"
-                      onClick={() => handleDelete(categoryTitle)}
+                      onClick={() => handleDelete(categoryType)}
           >
           {deleteCategoryLoading ? "Deleting..." : "Delete"}
           </Button>
@@ -190,7 +172,7 @@ const CategoryList = () => {
 
   return (
     <>
-      <BackComponent text="Category List" />
+      <BackComponent text="Task Category" />
       <CommonTable tableData={tableData} />
     </>
   );

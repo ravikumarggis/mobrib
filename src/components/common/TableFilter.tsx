@@ -215,7 +215,7 @@ const TableFilter: React.FC<TableFilterProps> = ({
               </div>
             </div>
 
-            <div className="w-full">
+            {/* <div className="w-full">
               <Listbox
                 onChange={(value) => {
                   setFilter((p: any) => ({
@@ -247,7 +247,7 @@ const TableFilter: React.FC<TableFilterProps> = ({
                   ))}
                 </ListboxOptions>
               </Listbox>
-            </div>
+            </div> */}
 
             <div className=" w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-3">
               <div className="w-full sm:min-w-40 flex items-end mt-4">
