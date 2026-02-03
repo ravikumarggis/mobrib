@@ -10,6 +10,8 @@ import AddCategory from "../pages/CategoryManagement/AddCategory";
 import KycList from "../pages/KycManagement/KycList";
 import KycView from "../pages/KycManagement/ViewKyc";
 import ViewUser from "../pages/UserManagement/ViewUser";
+import HelpCategoryList from "../pages/HelpSupport/CategoryList";
+import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
   {
@@ -24,6 +26,12 @@ const routes: RouteObject[] = [
       { path: "/category-list", element: <CategoryList /> },
       { path: "/add-category", element: <AddCategory /> },
       { path: "/kyc-list", element: <KycList /> },
+      { path: "/helpandsupport-list", element: <HelpCategoryList /> },
+      // { path: "/view-subcategory/:id", element: <SubCategoryList /> },
+      // { path: "/view-QuestionAnswer/:id", element: <ViewQuestionAnswerList /> },
+      // { path: "/Add-QuestionAnswer/:id", element: <AddQuestionAndAnswer /> },
+      { path: "/task-list", element: <Ticket /> },
+      // { path: "/tickets-details/:id", element: <TicketDetails /> },
     ],
   },
   { path: "/", element: <SignIn /> },

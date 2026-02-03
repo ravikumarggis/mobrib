@@ -27,34 +27,29 @@ import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
 import CopyButton from "../../components/common/CopyButton";
 import { useUserList } from "../../queries/user-management";
 import { IoMdEye } from "react-icons/io";
+import { useTaskList } from "../../queries/tickets";
 
 interface InrWithdrawListRowData {
   id: string;
   
-    name: number;
-    email: string;
-    user_id: string;
-    isNewUser: boolean;
-    isTestUser: boolean;
-  
-    mobileNumber: string;
-    status: string;
-    userStatus: string;
+  categoryType: number;
+  platformFee: string;
+  taskLocation: string;
+   
   createdAt: string;
-  updatedAt: string;
-  role: string;
+  
   Action: any;
 }
 
 const columnHelper = createColumnHelper<InrWithdrawListRowData>();
 
-const UserList = () => {
+const Ticket = () => {
   const navigate = useNavigate();
   const { setParam, searchParams, removeParam } = useSetSearchParam();
   const [filter, setFilter] = useState({ page: searchParams.get("page") });
   const debouncedFilter = useDebounce(filter, 1000);
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
-  const { data, isLoading } = useUserList(debouncedFilter);
+  const { data, isLoading } = useTaskList(debouncedFilter);
 
 
   
@@ -92,47 +87,21 @@ const UserList = () => {
         return Pagination({ filter, table, row });
       },
     },
-    columnHelper.accessor("name", {
-      header: "Name",
+    columnHelper.accessor("categoryType", {
+      header: "Category Type",
       cell: (info) => info.getValue() || "--",
     }),
-    // columnHelper.accessor("user.email", {
-    //   header: "Email",
-    //   cell: (info) => info.getValue() || "--",
-    // }),
-    columnHelper.accessor("email", {
-      header: "Email",
-      cell: (info) => {
-        const val = info.getValue() || "--";
-        return val ? (
-          <span>
-            {" "}
-            {val} <CopyButton textToCopy={val} />{" "}
-          </span>
-        ) : (
-          "--"
-        );
-      },
+    columnHelper.accessor("platformFee", {
+      header: "Platform Fee",
+      cell: (info) => info.getValue() || "0",
     }),
 
-    columnHelper.accessor("mobileNumber", {
-      header: "Mobile No.",
+
+    columnHelper.accessor("taskLocation", {
+      header: "Task Location",
       cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("userStatus", {
-      header: "Status",
-      cell: (info) => {
-        let value = info.getValue() || "--";
-        return (
-          <span className={`${statusColor(value)}`}>{statusText(value)}</span>
-        );
-      },
     }),
 
-    columnHelper.accessor("role", {
-      header: "User Type",
-      cell: (info) => info.getValue() || "--",
-    }),
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
       cell: (info) => DateTimeFormates(info.getValue()),
@@ -155,11 +124,11 @@ const UserList = () => {
             <IoMdEye
                       size={25}
                       className="cursor-pointer"
-                      onClick={() => {
-                        navigate(`/view-user`, {
-                          state: { userDetail: row?.original                },
-                        });
-                      }}
+                      // onClick={() => {
+                      //   navigate(`/view-user`, {
+                      //     state: { userDetail: row?.original                },
+                      //   });
+                      // }}
                     />
         );
       },
@@ -192,10 +161,10 @@ const UserList = () => {
 
   return (
     <>
-      <BackComponent text="User List" />
+      <BackComponent text="Task List" />
       <CommonTable tableData={tableData} />
     </>
   );
 };
 
-export default UserList;
+export default Ticket;

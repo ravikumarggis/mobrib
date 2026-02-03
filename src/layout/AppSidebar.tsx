@@ -121,9 +121,20 @@ const navItems: NavItem[] = [
   //   isRead: true,
   //   isWrite: true,
   // },
+
+  {
+    icon: <BiSupport />,
+    name: "Help And Support",
+    subItems: [
+      { name: "Reason List", path: "/helpandsupport-list", pro: false, },
+      { name: "Task list", path: "/task-list", pro: false },
+      // { name: "Support Contact (Website)", path: "/support-contact-us" }
+    ],
+    isRead: true,
+    isWrite: false,
+  },
 ];
 
-console.log(navItems, "navItemsnavItems");
 
 interface AppSidebarProps {
   searchModule: string;

@@ -8,7 +8,6 @@ import Button from "../ui/button/Button";
 import { useUpdateCategory, useUploadImage } from "../../queries/helpandspport";
 import { useAddCategory } from "../../queries/helpandspport";
 import toast from "react-hot-toast";
-import useModulePermissions from "../../queries/subAdmin";
 import Select from "../form/Select";
 
 interface CreateCategoryModalProps {
@@ -38,7 +37,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
   const { mutate: UpdatedataCategory } = useUpdateCategory(() => {
     onClose();
   });
-  const { write } = useModulePermissions("Help And Support");
+  
   let UpdateCategoryData: any, fileName;
   if (categoryID) {
     UpdateCategoryData = categoryData?.find(
@@ -48,29 +47,8 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
     fileName = url?.split("/").pop();
   }
 
-  const options = [
-    {
-      value: "English",
-      label: "English",
-    },
-    {
-      value: "Hindi",
-      label: "Hindi ",
-    }
-  ]
 
-  // const allowedImageTypes = [
-  //   "image/jpeg",
-  //   "image/png",
-  //   "image/jpg",
-  //   "image/gif",
-  //   "image/webp",
-  //   "image/tiff",
-  //   "image/bmp",
-  //   "image/svg+xml",
-  //   "image/heif",
-  //   "image/heic",
-  // ];
+ 
 
   const formik = useFormik({
     initialValues: {
@@ -81,8 +59,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
     enableReinitialize: categoryID ? true : false,
     validationSchema: Yup.object({
       CategoryName: Yup.string().required("Category is required."),
-      Description: Yup.string().required("Description is required."),
-      languageType: Yup.string().required("Language Type is required."),
+   
 
     }),
     onSubmit: (values) => {
@@ -90,18 +67,14 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
         UpdatedataCategory({
           categoryId: UpdateCategoryData?.id,
           categoryType: values.CategoryName,
-          description: values.Description,
-          languageType: values.languageType
-          // image: ImgeFileName
-          //   ? UploadImageData?.data?.result?.url
-          //   : UpdateCategoryData.image,
+        
+         
         });
       } else {
         AdddataCategory({
           categoryType: values.CategoryName,
-          description: values.Description,
-          languageType: values.languageType
-          // image: UploadImageData?.data?.result?.url,
+        
+         
         });
       }
     },
@@ -140,7 +113,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
         </h2>
 
         <div className="w-full">
-          <Label htmlFor="CategoryName">Category Name</Label>
+          <Label htmlFor="CategoryName">Reason Name</Label>
           <Input
             type="text"
             id="CategoryName"
@@ -164,77 +137,11 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
             )}
         </div>
 
-        <div className="w-full mt-4">
-          <Label htmlFor="Description">Description</Label>
-          <Input
-            type="text"
-            name="Description"
-            id="Description"
-            value={formik.values.Description}
-            onChange={formik.handleChange}
-            placeholder="Enter Description"
-          />
-          {/* {formik.touched.Description && formik.errors.Description && (
-            <span className="text-red-500 text-xs">
-              {formik.errors.Description}
-            </span>
-          )} */}
+     
 
-          {formik.touched.CategoryName &&
-            formik.errors.CategoryName &&
-            typeof formik.errors.CategoryName === "string" && (
-              <span className="text-red-500 text-xs">
-                {formik.errors.CategoryName}
-              </span>
-            )}
-        </div>
-
-        <div className="w-full mt-4">
-          <Label>Language Type</Label>
-          <Select
-            options={options}
-            value={formik.values.languageType}
-            placeholder="Select Category"
-            onChange={(e) => {
-              formik.setFieldValue("languageType", e);
-            }}
-            className="dark:bg-dark-900"
-          />
-          {formik.touched.languageType && formik.errors.languageType && (
-            <span className="text-red-500 text-xs">
-              {formik.touched.languageType && formik.errors.languageType && (
-                <span className="text-red-500 text-xs">
-                  {formik.errors.languageType as string}
-                </span>
-              )}
-            </span>
-          )}
-        </div>
-        {/* 
-        <div className="mb-6 mt-5">
-          <label className="block text-sm font-medium mb-1 text-gray-900 dark:text-white">
-            Upload Icon Image
-          </label>
-          <input
-            type="file"
-            name="file"
-            title="Choose a video please"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full text-sm text-gray-500 file:mr-4 file:py-1 file:px-3 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-          />
-          {(ImgeFileName || (UpdateCategoryData && categoryID && fileName)) && (
-            <p className="text-sm text-gray-500">
-              {ImgeFileName
-                ? categoryID && ImgeFileName
-                : categoryID
-                ? fileName
-                : null}
-            </p>
-          )}
-        </div> */}
-
-        {write && (
+       
+     
+        
           <div className="flex justify-center mt-5">
             <Button
               children={`${btnText}`}
@@ -242,7 +149,7 @@ const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
               onClick={() => formik.handleSubmit()}
             />
           </div>
-        )}
+    
       </div>
     </div>
   );

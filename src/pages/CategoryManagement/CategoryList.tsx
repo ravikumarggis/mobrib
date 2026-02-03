@@ -26,6 +26,7 @@ import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
 
 import { useCategoryList, useDeleteCategory } from "../../queries/category-mangement";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 
 interface InrWithdrawListRowData {
   id: string;
@@ -134,12 +135,12 @@ const CategoryList = () => {
         const categoryType = row.original._id;
     
         return (
-          <Button
-          className="bg-red-600 hover:bg-red-700"
-                      onClick={() => handleDelete(categoryType)}
-          >
-          {deleteCategoryLoading ? "Deleting..." : "Delete"}
-          </Button>
+          
+          <MdOutlineDeleteOutline
+                        size={25}
+                        className="cursor-pointer text-red-500"
+                        onClick={() => handleDelete(categoryType)}
+                      />
         );
       },
     }
