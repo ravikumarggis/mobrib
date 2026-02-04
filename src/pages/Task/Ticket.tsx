@@ -24,7 +24,7 @@ import { useTaskList } from "../../queries/tickets";
 interface InrWithdrawListRowData {
   id: string;
   
-  categoryType: number;
+  userId: any;
   platformFee: string;
   taskLocation: string;
   location: any;
@@ -82,9 +82,13 @@ const Ticket = () => {
         return Pagination({ filter, table, row });
       },
     },
-    columnHelper.accessor("categoryType", {
-      header: "Category Type",
-      cell: (info) => info.getValue() || "--",
+    columnHelper.accessor("userId", {
+      header: "Name",
+      cell: (info) => info.row.original.userId?.name || "--",
+    }),
+    columnHelper.accessor("userId", {
+      header: "Email",
+      cell: (info) => info.row.original.userId?.email || "--",
     }),
     columnHelper.accessor("platformFee", {
       header: "Platform Fee",
@@ -92,10 +96,7 @@ const Ticket = () => {
     }),
 
 
-    columnHelper.accessor("taskLocation", {
-      header: "Task Location",
-      cell: (info) => info.getValue() || "--",
-    }),
+ 
     columnHelper.accessor("paymentStatus", {
       header: "Payment Status",
       cell: (info) => info.getValue() || "--",
@@ -148,8 +149,8 @@ const Ticket = () => {
                       size={25}
                       className="cursor-pointer"
                       onClick={() => {
-                        navigate(`/view-user`, {
-                          state: { userDetail: row?.original                },
+                        navigate(`/view-task`, {
+                          state: { id: row?.original                },
                         });
                       }}
                     />

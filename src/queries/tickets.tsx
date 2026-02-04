@@ -13,6 +13,11 @@ type FilterType = {
   isNewUser?: string;
   isTestUser?: string;
 };
+type VerifiedOrRejectedTaskPlayload = {
+  _id?: string;
+  taskProgress?: string;
+ 
+};
 
 export const fetchUserList = async ( filter: FilterType) => {
   try {
@@ -54,3 +59,70 @@ export const useTaskList = ( filter: FilterType) => {
    
   });
 };
+export const fetchTaskDetail = async ( id: string) => {
+  try {
+    const response = await api({
+      url: `/admin/viewTask`,
+      method: "GET",
+      params: {
+      
+     
+        _id: id || undefined,
+      
+        
+    
+     
+      },
+    });
+    return response;
+  } catch (error: any) {
+    console.error("API error:", error);
+    return error?.response;
+  }
+};
+
+
+
+export const useTaskDetail = ( id: string) => {
+  return useQuery({
+    queryKey: ["userList", id],
+    queryFn: () => fetchTaskDetail( id),
+    select(data) {
+      if (data?.data?.responseCode === 200) {
+        return data?.data?.result;
+      } else {
+        return {};
+      }
+    },
+   
+  });
+};
+
+
+
+const handleTaskUpdate = async (
+  data: VerifiedOrRejectedTaskPlayload
+) => {
+  try {
+    const response = await api({
+      url: "/admin/updateTask",
+      method: "PUT",
+      data: data,
+    });
+    if (response?.data?.responseCode === 200) {
+      toast.success(response?.data?.responseMessage);
+
+      return response?.data;
+    }
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage);
+    return error?.response?.data;
+  }
+};
+
+export const useApproveRejectTaskDetail = () => {
+  return useMutation({
+    mutationFn: (data: VerifiedOrRejectedTaskPlayload) =>
+      handleTaskUpdate(data),
+  });
+}; 

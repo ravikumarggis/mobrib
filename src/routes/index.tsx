@@ -11,7 +11,9 @@ import KycList from "../pages/KycManagement/KycList";
 import KycView from "../pages/KycManagement/ViewKyc";
 import ViewUser from "../pages/UserManagement/ViewUser";
 import HelpCategoryList from "../pages/HelpSupport/CategoryList";
-import Ticket from "../pages/HelpSupport/Ticket";
+import Ticket from "../pages/Task/Ticket";
+import ViewTask from "../pages/Task/ViewTask";
+// import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
   {
@@ -23,14 +25,17 @@ const routes: RouteObject[] = [
       { path: "/kyc-view", element: <KycView /> },
       { path: "/user-list", element: <UserList /> },
       { path: "/view-user", element: <ViewUser /> },
+    
       { path: "/category-list", element: <CategoryList /> },
       { path: "/add-category", element: <AddCategory /> },
       { path: "/kyc-list", element: <KycList /> },
       { path: "/helpandsupport-list", element: <HelpCategoryList /> },
+
       // { path: "/view-subcategory/:id", element: <SubCategoryList /> },
       // { path: "/view-QuestionAnswer/:id", element: <ViewQuestionAnswerList /> },
       // { path: "/Add-QuestionAnswer/:id", element: <AddQuestionAndAnswer /> },
       { path: "/task-list", element: <Ticket /> },
+      { path: "/view-task", element: <ViewTask /> },
       // { path: "/tickets-details/:id", element: <TicketDetails /> },
     ],
   },

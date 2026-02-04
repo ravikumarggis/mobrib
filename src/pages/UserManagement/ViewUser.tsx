@@ -21,7 +21,7 @@ const ViewUser: React.FC = () => {
   const navigate = useNavigate(); 
   const location = useLocation();
   const { userDetail } = location.state || {};
-  console.log(userDetail,"userDetailuserDetail");
+
   
 
   const isPending =

@@ -7,7 +7,7 @@ import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { AiTwotoneBank } from "react-icons/ai";
 import { LiaUsersCogSolid } from "react-icons/lia";
-import { BiSupport } from "react-icons/bi";
+import { BiSupport, BiTask } from "react-icons/bi";
 import { MdOutlineContentPaste } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
 import { useProfile } from "../queries/auth";
@@ -114,6 +114,13 @@ const navItems: NavItem[] = [
     isRead: true,
     isWrite: true,
   },
+  {
+    icon: <BiTask />,
+    name: "Task List",
+    path: "/task-list",
+    isRead: true,
+    isWrite: true,
+  },
   // {
   //   icon: <BiWallet />,
   //   name: "KYC Management",
@@ -127,7 +134,7 @@ const navItems: NavItem[] = [
     name: "Help And Support",
     subItems: [
       { name: "Reason List", path: "/helpandsupport-list", pro: false, },
-      { name: "Task list", path: "/task-list", pro: false },
+      // { name: "Task list", path: "/task-list", pro: false },
       // { name: "Support Contact (Website)", path: "/support-contact-us" }
     ],
     isRead: true,
