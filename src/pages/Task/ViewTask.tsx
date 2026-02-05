@@ -1,131 +1,6 @@
-// import React, { useEffect, useState } from "react";
-// import { useLocation, useNavigate } from "react-router";
-// import Button from "../../components/ui/button/Button";
-// import LoadingScreen from "../../components/common/LoadingScreen";
-// import BackComponent from "../../components/backcomponent/BackComponent";
 
-// import {
-//   DateTimeFormates,
-//   DetailRow,
-//   statusColor,
-//   statusText,
-// } from "../../utils";
-// import CopyButton from "../../components/common/CopyButton";
-// // import { useApproveRejecttaskDetail } from "../../queries/user-management";
-// import { useTaskDetail } from "../../queries/tickets";
-// import { useApproveRejectUserDetail } from "../../queries/user-management";
 
-// const ViewTask: React.FC = () => {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const { id } = location.state || {};
-//     const { data : taskDetail, isLoading } = useTaskDetail(id?._id);
-//   console.log(taskDetail,"taskDetailtaskDetail");
-
-//   const isPending =
-//     statusText(taskDetail?.userStatus) === "DELETED";
-
-//   const {
-//     mutate: ApproveRejectUser,
-//     isPending: cryptoLoading,
-//     isSuccess: cryptoSuccess,
-//   } = useApproveRejectUserDetail();
-
-//   const [showConfirmModal, setShowConfirmModal] = useState(false);
-//   const [TextMessage, setIsTextMessage] = useState("");
-//   const [VerifyOrRejected, setIsVerifyOrRejected] = useState("");
-//   const [showTextArea, setIsShowTextArea] = useState(false);
-
-//   const handleBlockUnblock = () => {
-//     if (!taskDetail?._id) return;
-
-//     ApproveRejectUser({
-//       _id: taskDetail._id,
-//       status:  taskDetail?.userStatus == "BLOCK" ? "ACTIVE" : "BLOCK",
-//     });
-//   };
-
-//   const handleReject = () => {
-
-//     if (!taskDetail?._id) return;
-
-//     ApproveRejectUser({
-//       _id: taskDetail._id,
-//       status: "DELETE",
-
-//     });
-//   };
-
-//   useEffect(() => {
-//     if (cryptoSuccess) {
-//       setShowConfirmModal(false);
-//       setIsTextMessage("");
-
-//       navigate("/user-list"); // ✅ redirect
-//     }
-//   }, [cryptoSuccess, navigate]);
-
-//   return (
-//     <>
-//       <BackComponent text="Task Details" />
-
-//       <div className="w-full flex flex-col xl:px-40 mt-[5%]">
-//         <div className="mb-8 border p-5 rounded border-gray-300 dark:border-gray-700">
-//           <div className="space-y-3">
-//             <DetailRow label="Name" value={taskDetail?.name || "--"} />
-//             <DetailRow label="Email" value={taskDetail?.email || "--"} />
-//             <DetailRow label="Mobile no." value={taskDetail?.mobileNumber || "--"} />
-
-//             <div className="flex items-center">
-//               <DetailRow label="User Id" value={taskDetail?._id || "--"} />
-//               <CopyButton textToCopy={taskDetail?._id} />
-//             </div>
-//             <DetailRow label="User Type" value={taskDetail?.role || "--"} />
-
-//             <DetailRow
-//               label="Date & Time"
-//               value={DateTimeFormates(taskDetail?.createdAt)}
-//             />
-
-//             <DetailRow
-//               label="Status"
-//               value={statusText(taskDetail?.userStatus)}
-//               color={statusColor(taskDetail?.userStatus)}
-//             />
-
-//           </div>
-//         </div>
-
-//         {/* ACTION BUTTONS */}
-//         {
-//             !(taskDetail?.userStatus == "DELETE") &&
-
-//         <div className="flex justify-end gap-4 pb-6">
-//           <Button disabled={isPending} onClick={handleBlockUnblock}>
-//             {taskDetail?.userStatus == "BLOCK" ? "Unblock" : "Block"}
-//           </Button>
-
-//           <Button
-//             disabled={isPending}
-//             onClick={() => {
-//                 handleReject()
-//             }}
-//             variant="outline"
-//           >
-//             Delete
-//           </Button>
-//         </div> }
-//       </div>
-
-//       {(cryptoLoading ) && <LoadingScreen />}
-
-//     </>
-//   );
-// };
-
-// export default ViewTask;
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Button from "../../components/ui/button/Button";
 import LoadingScreen from "../../components/common/LoadingScreen";
@@ -134,16 +9,23 @@ import BackComponent from "../../components/backcomponent/BackComponent";
 import {
   DateTimeFormates,
   DetailRow,
-  statusColor,
+  Pagination,
   statusText,
 } from "../../utils";
-import CopyButton from "../../components/common/CopyButton";
 
 import {
-  useApproveRejectTaskDetail,
+  useApproveRejectBid,
   useTaskDetail,
 } from "../../queries/tickets";
-import { useApproveRejectUserDetail } from "../../queries/user-management";
+import {
+  createColumnHelper,
+  getCoreRowModel,
+  useReactTable,
+} from "@tanstack/react-table";
+import CommonTable from "../../components/common/CommonTable";
+import { useSetSearchParam } from "../../hooks/useSetSearchParam";
+import ConfirmModal from "../../components/modal/confirmModal";
+
 
 const TASK_STATUS_OPTIONS = [
   "Posted",
@@ -153,18 +35,40 @@ const TASK_STATUS_OPTIONS = [
   "Rejected",
 ];
 
+interface InrWithdrawListRowData {
+  id: string;
+  bidStatus : string;
+  amount: any;
+  platformFee: string;
+  taskLocation: string;
+  location: any;
+
+  paymentStatus: string;
+  taskProgress: string;
+  createdAt: string;
+
+  Action: any;
+}
+
+const columnHelper = createColumnHelper<InrWithdrawListRowData>();
+
 const ViewTask: React.FC = () => {
   const navigate = useNavigate();
+  const { setParam, removeParam } = useSetSearchParam();
   const location = useLocation();
   const { id } = location.state || {};
+    const [showConfirmationModal, setshowConfirmationModal] = useState(false);
+    const [selectCategoryID, setselectCategoryID] = useState("");
 
   const { data: taskDetail, isLoading } = useTaskDetail(id?._id);
 
+  console.log(taskDetail?.bids, "taskDetailtaskDetail");
+
   const {
-    mutate: ApproveRejectUser,
+    mutate: ApproveRejectBid,
     isPending: cryptoLoading,
     isSuccess: cryptoSuccess,
-  } = useApproveRejectTaskDetail();
+  } = useApproveRejectBid();
 
   const [taskStatus, setTaskStatus] = useState("");
 
@@ -177,11 +81,11 @@ const ViewTask: React.FC = () => {
 
   /* Update task status */
   const handleUpdateTaskStatus = () => {
-    if (!taskDetail?._id || !taskStatus) return;
+    if (!selectCategoryID ) return;
 
-    ApproveRejectUser({
-      _id: taskDetail._id,
-      taskProgress: taskStatus,
+    ApproveRejectBid({
+      _id: selectCategoryID,
+      bidStatus: "REJECTED",
     });
   };
 
@@ -191,6 +95,85 @@ const ViewTask: React.FC = () => {
       navigate("/task-list");
     }
   }, [cryptoSuccess, navigate]);
+  const formateData = useMemo(() => {
+    const tabledata = taskDetail?.bids ?? [];
+    const pages = 1;
+
+    return { tabledata, pages };
+  }, [taskDetail]);
+
+  const columns = [
+    {
+      header: "Sr. No",
+      id: "serial",
+      cell: ({ row, table }) => Pagination({ table, row }),
+    },
+    columnHelper.accessor(row => row?.hirerId?.name, {
+      id: "name",
+      header: "Name",
+      cell: info => info.getValue() || "--",
+    }),
+    
+    columnHelper.accessor(row => row?.hirerId?.email, {
+      id: "email",
+      header: "Email",
+      cell: info => info.getValue() || "--",
+    }),
+ 
+    columnHelper.accessor(row => row?.amount, {
+      id: "amount",
+      header: "Amount",
+      cell: info => info.getValue() || "--",
+    }),
+  
+    columnHelper.accessor(row => row.bidStatus, {
+      id: "status",
+      header: "Status",
+      cell: info => info.getValue() || "--",
+    }),
+  
+  
+  
+    columnHelper.accessor("createdAt", {
+      header: "Date & Time",
+      cell: info => DateTimeFormates(info.getValue()),
+    }),
+  
+    {
+      header: "Action",
+      id: "view",
+      cell: ({ row }) => (
+       
+        <Button
+        className=" py-3 bg-red-700 hover:bg-red-600"
+        disabled={row.original.bidStatus == "REJECTED"}
+        onClick={() => {
+          setselectCategoryID(row.original._id);
+                setshowConfirmationModal(true);
+        }}
+      >
+        Reject
+      </Button>
+      ),
+    },
+  ];
+  
+
+  const table = useReactTable({
+    data: formateData?.tabledata,
+    columns: columns ?? [],
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  const tableData = {
+    isLoading,
+    table,
+    // type: "userList",
+    totalPage: formateData?.pages,
+
+    removeParamFn: () => removeParam("page"),
+    setSearchParamsFn: (page: number) => setParam("page", page),
+  };
 
   if (isLoading) return <LoadingScreen />;
 
@@ -217,16 +200,15 @@ const ViewTask: React.FC = () => {
                 </option>
               ))}
             </select>
-
           </div>
-            <div className="">
-              <Button
-                disabled={!taskStatus || cryptoLoading}
-                onClick={handleUpdateTaskStatus}
-              >
-                Update Status
-              </Button>
-            </div>
+          <div className="">
+            <Button
+              disabled={!taskStatus || cryptoLoading}
+              onClick={handleUpdateTaskStatus}
+            >
+              Update Status
+            </Button>
+          </div>
 
           {/* ACTION BUTTONS */}
         </div>
@@ -280,52 +262,35 @@ const ViewTask: React.FC = () => {
               label="Status"
               value={statusText(taskDetail?.taskProgress)}
             />
-            <DetailRow
-  label="Bids"
-  value={
-    taskDetail?.bids && taskDetail?.bids.length > 0 ? (
-      <div className="space-y-3">
-        {taskDetail?.bids?.map((bid: any, index: number) => (
-          <div
-            key={bid._id || index}
-            className="border rounded p-3 text-sm dark:border-gray-700"
-          >
-            <div>
-              <strong>Bidder:</strong> {bid?.userId?.name || "--"}
-            </div>
-
-            <div>
-              <strong>Email:</strong> {bid?.userId?.email || "--"}
-            </div>
-
-            <div>
-              <strong>Amount:</strong> ₹{bid?.amount || "--"}
-            </div>
-
-            <div>
-              <strong>Status:</strong> {statusText(bid?.status)}
-            </div>
-
-            <div>
-              <strong>Date:</strong>{" "}
-              {DateTimeFormates(bid?.createdAt)}
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      "-- No Bids --"
-    )
-  }
-/>
-
           </div>
         </div>
 
         {/* TASK STATUS DROPDOWN */}
       </div>
 
+      <label className="dark:text-white block mb-2 font-medium ">
+        Bids List
+      </label>
+
+      <CommonTable tableData={tableData} />
+
       {cryptoLoading && <LoadingScreen />}
+
+      {
+        showConfirmationModal && (
+          <ConfirmModal
+            message="Are you sure you want to Reject this Bid?"
+            isOpen={showConfirmationModal}
+            btnTextClose="Close"
+            btnTextConfirm="Confirm"
+            onClose={() => setshowConfirmationModal(false)}
+            onConfirm={() => {
+              handleUpdateTaskStatus()
+              setshowConfirmationModal(false);
+            }}
+          />
+        )
+      }
     </>
   );
 };

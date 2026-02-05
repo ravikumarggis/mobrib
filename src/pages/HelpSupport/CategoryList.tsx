@@ -231,7 +231,7 @@ const CategoryList: React.FC = () => {
       {
         showConfirmationModal && (
           <ConfirmModal
-            message="Are you sure you want to delete this Category?"
+            message="Are you sure you want to delete this Reason?"
             isOpen={showConfirmationModal}
             btnTextClose="Close"
             btnTextConfirm="Confirm"

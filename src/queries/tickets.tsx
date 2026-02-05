@@ -126,3 +126,29 @@ export const useApproveRejectTaskDetail = () => {
       handleTaskUpdate(data),
   });
 }; 
+
+const handleBidUpdate = async (
+  data: VerifiedOrRejectedTaskPlayload
+) => {
+  try {
+    const response = await api({
+      url: "/admin/updateBid",
+      method: "PUT",
+      data: data,
+    });
+    if (response?.data?.responseCode === 200) {
+      toast.success(response?.data?.responseMessage);
+
+      return response?.data;
+    }
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage);
+    return error?.response?.data;
+  }
+};
+export const useApproveRejectBid = () => {
+  return useMutation({
+    mutationFn: (data: VerifiedOrRejectedTaskPlayload) =>
+      handleBidUpdate(data),
+  });
+}; 
