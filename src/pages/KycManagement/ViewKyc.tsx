@@ -63,7 +63,7 @@ const KycView: React.FC = () => {
 
   return (
     <>
-      <BackComponent text="Withdraw Details" />
+      <BackComponent text="KYC Details" />
 
       <div className="w-full flex flex-col xl:px-40 mt-[5%]">
         <div className="mb-8 border p-5 rounded border-gray-300 dark:border-gray-700">

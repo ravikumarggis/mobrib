@@ -121,13 +121,13 @@ const navItems: NavItem[] = [
     isRead: true,
     isWrite: true,
   },
-  // {
-  //   icon: <BiWallet />,
-  //   name: "KYC Management",
-  //   path: "/kyc-list",
-  //   isRead: true,
-  //   isWrite: true,
-  // },
+  {
+    icon: <BiWallet />,
+    name: "KYC Management",
+    path: "/kyc-list",
+    isRead: true,
+    isWrite: true,
+  },
 
   {
     icon: <BiSupport />,

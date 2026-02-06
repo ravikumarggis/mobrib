@@ -15,6 +15,7 @@ import {
 
 import {
   useApproveRejectBid,
+  useApproveRejectTaskDetail,
   useTaskDetail,
 } from "../../queries/tickets";
 import {
@@ -69,6 +70,11 @@ const ViewTask: React.FC = () => {
     isPending: cryptoLoading,
     isSuccess: cryptoSuccess,
   } = useApproveRejectBid();
+  const {
+    mutate: ApproveRejectTask,
+    isPending: TaskLoading,
+    isSuccess: TaskSuccess,
+  } = useApproveRejectTaskDetail();
 
   const [taskStatus, setTaskStatus] = useState("");
 
@@ -89,12 +95,23 @@ const ViewTask: React.FC = () => {
     });
   };
 
+
+  const handleTaskStatus = () => {
+    if (!taskDetail?._id || !taskStatus) return;
+
+    ApproveRejectTask({
+      _id: taskDetail._id,
+      taskProgress: taskStatus,
+    });
+  };
+
+
   /* Redirect after success */
   useEffect(() => {
-    if (cryptoSuccess) {
+    if (cryptoSuccess || TaskSuccess) {
       navigate("/task-list");
     }
-  }, [cryptoSuccess, navigate]);
+  }, [cryptoSuccess, TaskSuccess,navigate]);
   const formateData = useMemo(() => {
     const tabledata = taskDetail?.bids ?? [];
     const pages = 1;
@@ -204,7 +221,7 @@ const ViewTask: React.FC = () => {
           <div className="">
             <Button
               disabled={!taskStatus || cryptoLoading}
-              onClick={handleUpdateTaskStatus}
+              onClick={handleTaskStatus}
             >
               Update Status
             </Button>

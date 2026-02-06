@@ -55,6 +55,10 @@ const KycList = () => {
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
   const { data, isLoading } = useKycList(debouncedFilter);
 
+
+  console.log(data,"datadatadata");
+  
+
   const {
     data: WithdrawCryptoInrCSV,
     isLoading: WithdrawCryptoInrCSVLoading,
@@ -63,7 +67,7 @@ const KycList = () => {
 
   const formateData = useMemo(() => {
     const tabledata = data?.docs ?? [];
-    const pages = data?.totalPages ?? 0;
+    const pages = data?.pages ?? 0;
     const WithCryptoInrCSVData =
       WithdrawCryptoInrCSV?.result?.docs?.map((item: any) => ({
         Name: item?.user?.name,
