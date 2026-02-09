@@ -117,11 +117,10 @@ const KycList = () => {
           cell: (info) => info.getValue() || "--",
         }
       ),
-      columnHelper.accessor("aadhaarNumber", {
-        header: "Aadhaar Number",
-        cell: (info) => info.getValue() || "--",
+      columnHelper.accessor("role", {
+        header: "Role",
+        cell: ({ row }) => row.original?.userId?.role || "--",
       }),
- 
     // columnHelper.accessor("panNumber", {
     //   header: "Pan No.",
     //   cell: (info) => {
@@ -147,7 +146,7 @@ const KycList = () => {
       cell: (info) => DateTimeFormates(info.getValue()),
     }),
 
-    columnHelper.accessor("kycStatus", {
+    columnHelper.accessor("status", {
       header: "Status",
       cell: (info) => {
         let value = info.getValue() || "--";

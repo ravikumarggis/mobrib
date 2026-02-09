@@ -1,78 +1,66 @@
-import moment from "moment";
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import { useDebounce } from "@uidotdev/usehooks";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { createColumnHelper, getCoreRowModel, useReactTable, } from "@tanstack/react-table";
 import CommonTable from "../../components/common/CommonTable";
+import { useTicketsList, useTicketsListCSV, useTicketStatus } from "../../queries/ticket";
 import { useNavigate } from "react-router";
-import BackComponent from "../../components/backcomponent/BackComponent";
-import {
-  DateTimeFormates,
-  Pagination,
-  statusText,
-
-} from "../../utils";
+import Button from "../../components/ui/button/Button";
+import { useDebounce } from "@uidotdev/usehooks";
+import "@smastrom/react-rating/style.css";
+import { DateTimeFormates, OldNewUserTag, Pagination, statusText, TestRealUserType } from "../../utils";
+import CopyButton from "../../components/common/CopyButton";
 import { useSetSearchParam } from "../../hooks/useSetSearchParam";
-import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
+import BackComponent from "../../components/backcomponent/BackComponent";
+import ToggleSwitchButton from "../../components/form/ToggleSwitchButton";
+import LoadingScreen from "../../components/common/LoadingScreen";
+import { useHelpAsupportList } from "../../queries/helpandspport";
 
-import { IoMdEye } from "react-icons/io";
-import { useTaskList } from "../../queries/tickets";
-
-interface InrWithdrawListRowData {
-  id: string;
-  
-  categoryType: number;
-  platformFee: string;
-  taskLocation: string;
-  location: any;
-   
-  paymentStatus: string;
-  taskProgress: string;
+type User = {
+  id: number;
+  ticketId: number;
+  email: string;
+  name: string;
+  categoryType: string;
+  ticketStatus: string;
+  isGuestUser: boolean;
   createdAt: string;
-  
-  Action: any;
-}
-
-const columnHelper = createColumnHelper<InrWithdrawListRowData>();
-
-const Ticket = () => {
+  starRate: string;
+  Action?: any;
+  user: {
+    user_id: string;
+    isNewUser: boolean;
+    isTestUser: boolean;
+  };
+};
+const columnHelper = createColumnHelper<User>();
+const Ticket: React.FC = () => {
   const navigate = useNavigate();
+  const [isDownloadCsv, setIsDownloadCsv] = useState(false)
+  const { mutate, isSuccess, isPending: TicketStatusPending } = useTicketStatus();
   const { setParam, searchParams, removeParam } = useSetSearchParam();
-  const [filter, setFilter] = useState({ page: searchParams.get("page") });
+  const [filter, setFilter] = useState({ page: searchParams.get("page"), languageType: "English" });
   const debouncedFilter = useDebounce(filter, 1000);
-  const [isDownloadCsv, setIsDownloadCsv] = useState(false);
-  const { data, isLoading } = useTaskList(debouncedFilter);
+  const { data: ticketList, isPending, refetch } = useTicketsList(debouncedFilter);
+  const { data: CsvData, isLoading: downloadCSVLoade, isSuccess: TicketsListCSVSucces } = useTicketsListCSV(debouncedFilter, isDownloadCsv);
 
-
+  const { data: CategoryList } = useHelpAsupportList(debouncedFilter);
   
+  useEffect(() => {
+    if (isSuccess) {
+      refetch()
+    }
 
-  const {
-    data: WithdrawCryptoInrCSV,
-    isLoading: WithdrawCryptoInrCSVLoading,
-    isSuccess,
-  } = useWithdrawCryptoInrCSV(debouncedFilter, "Fiat", isDownloadCsv);
+  }, [isSuccess])
 
   const formateData = useMemo(() => {
-    const tabledata = data?.docs ?? [];
-    const pages = data?.totalPages ?? 0;
-    const WithCryptoInrCSVData =
-      WithdrawCryptoInrCSV?.result?.docs?.map((item: any) => ({
-        Name: item?.user?.name,
-        Email: item?.user?.email,
+    const tableData = ticketList?.data?.result?.docs ?? [];
+    const totalPage = ticketList?.data?.result?.pages ?? 0;
+    const Subject = CategoryList?.data?.result?.map((item: any, index: number) => ({ id: index + 1, name: item?.categoryType })) ?? [];
+  
+    return { tableData, totalPage, Subject }
 
-        Status: statusText(item?.withdrawStatus),
-      })) ?? [];
-    return { tabledata, pages, WithCryptoInrCSVData };
-  }, [data, WithdrawCryptoInrCSV]);
+  }, [ticketList, CsvData, CategoryList]);
 
-  useEffect(() => {
-    if (isSuccess && WithdrawCryptoInrCSV?.result?.docs?.length > 0) {
-      setIsDownloadCsv(false);
-    }
-  }, [isSuccess, WithdrawCryptoInrCSV]);
+  
 
   const columns = [
     {
@@ -82,110 +70,135 @@ const Ticket = () => {
         return Pagination({ filter, table, row });
       },
     },
-    columnHelper.accessor("categoryType", {
-      header: "Category Type",
-      cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("platformFee", {
-      header: "Platform Fee",
-      cell: (info) => info.getValue() || "0",
-    }),
 
 
-    columnHelper.accessor("taskLocation", {
-      header: "Task Location",
+    columnHelper.accessor("user.name", {
+      header: "Name",
       cell: (info) => info.getValue() || "--",
     }),
-    columnHelper.accessor("paymentStatus", {
-      header: "Payment Status",
-      cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("taskProgress", {
-      header: "Task Status",
-      cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("location", {
-      header: "Location",
+
+    columnHelper.accessor("user.email", {
+      header: "Email",
       cell: (info) => {
-        const location = info.getValue();
-    
-        if (!location?.coordinates?.length) return "--";
-    
-        const [lng, lat] = location.coordinates;
-    
-        return (
-          <a
-            href={`https://www.google.com/maps?q=${lat},${lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📍 Map
-          </a>
+        const val = info.getValue() || "--";
+        const isGuestUser = info?.row?.original?.isGuestUser;
+        return !isGuestUser ? (
+          <span>
+            {val}
+            <CopyButton textToCopy={val} />
+          </span>
+        ) : (
+          "--"
         );
       },
     }),
-    
+
+    columnHelper.accessor("user.mobileNumber", {
+      header: "Mobile Number",
+      cell: (info) => info.getValue(),
+    }),
+
+    columnHelper.accessor("reason", {
+      header: "Reason",
+      cell: (info) => info.getValue()
+    }),
+
+    columnHelper.accessor("ticketStatus", {
+      header: "Status",
+      cell: (info) => {
+        const value = info.getValue();
+        const status =
+          value === "pending"
+            ? "Pending"
+            : value === "in-process"
+              ? "In-Process"
+              : value === "resolved"
+                ? "Resolved"
+                : "--";
+        let color = "";
+        if (value === "resolved") color = "text-green-500";
+        else if (value === "pending") color = "text-yellow-500";
+        else if (value === "in-process") color = "text-yellow-700";
+        return <span className={`${color}`}>{status}</span>;
+      },
+    }),
+
+
+ 
+
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
-      cell: (info) => DateTimeFormates(info.getValue()),
+      cell: (info) => DateTimeFormates(info.getValue())
+
     }),
 
-    {
-      header: "Action",
-      id: "view",
-      cell: ({ row }: { row: any }) => {
-        return (
-          // <Button
-          //   onClick={() => {
-          //     navigate(`/view-user`, {
-          //       state: { userDetail: row?.original                },
-          //     });
-          //   }}
-          // >
-          //   View
-          // </Button>
-            <IoMdEye
-                      size={25}
-                      className="cursor-pointer"
-                      onClick={() => {
-                        navigate(`/view-user`, {
-                          state: { userDetail: row?.original                },
-                        });
-                      }}
-                    />
-        );
-      },
-    },
+    // columnHelper.accessor("Action", {
+    //   header: "Action",
+    //   cell: ({ row }) => {
+    //     return (
+    //       <Button
+    //         onClick={() => navigate(`/tickets-details/${row.original._id}`)}
+    //       >
+    //         View
+    //       </Button>
+    //     );
+    //   },
+    // }),
   ];
 
   const table = useReactTable({
-    data: formateData?.tabledata,
-    columns: columns ?? [],
+    data: formateData?.tableData,
+    columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   const tableData = {
     filter,
     setFilter,
-    isLoading,
     table,
-    type: "userList",
-    totalPage: formateData?.pages,
-    filterData: {
-      WithCryptoInrCSVData: formateData?.WithCryptoInrCSVData,
-      isCSVloading: WithdrawCryptoInrCSVLoading,
-      setIsDownloadCsv: setIsDownloadCsv,
-      isSuccess: isSuccess,
-      isDownloadCsv: isDownloadCsv,
-    },
+    isLoading: isPending,
+    type: "ticket",
+    totalPage: formateData?.totalPage,
     removeParamFn: () => removeParam("page"),
     setSearchParamsFn: (page: number) => setParam("page", page),
+    filterData: {
+      isCSVloading: downloadCSVLoade,
+      Subject: formateData?.Subject,
+      // downloadCSV: formateData?.downloadCSVData,
+      setIsDownloadCsv: setIsDownloadCsv,
+      isSuccess: TicketsListCSVSucces,
+      isDownloadCsv: isDownloadCsv
+
+    },
   };
 
   return (
     <>
-      <BackComponent text="Task List" />
-      <CommonTable tableData={tableData} />
+      <div className="w-full">
+        <div className="w-full mb-5">
+          <BackComponent text="Ticket List" />
+        </div>
+        <div className="w-full">
+          {/* <div className="w-full grid grid-cols-1 md:grid-cols-3  gap-x-5 gap-y-4">
+            <div className="border rounded-lg flex flex-col justify-center items-center font-semibold border-gray-300  dark:border-gray-700 py-2 dark:text-gray-100">
+              <h3>Pending Requests</h3>
+              <p>{ticketList?.data?.result?.totalPendingCount}</p>
+            </div>
+            <div className="border rounded-lg flex flex-col justify-center items-center font-semibold border-gray-300  dark:border-gray-700 py-2 dark:text-gray-100">
+              <h3>In-process Requests</h3>
+              <p>{ticketList?.data?.result?.totalInprocessCount}</p>
+            </div>
+            <div className="border rounded-lg flex flex-col justify-center items-center font-semibold border-gray-300  dark:border-gray-700 py-2 dark:text-gray-100">
+              <h3>Resolved Requests</h3>
+              <p>{ticketList?.data?.result?.totalResolvedCount}</p>
+            </div>
+          </div> */}
+
+          <CommonTable tableData={tableData} />
+
+          {TicketStatusPending && <LoadingScreen />}
+        </div>
+      </div>
     </>
   );
 };

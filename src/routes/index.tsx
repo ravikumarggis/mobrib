@@ -11,8 +11,10 @@ import KycList from "../pages/KycManagement/KycList";
 import KycView from "../pages/KycManagement/ViewKyc";
 import ViewUser from "../pages/UserManagement/ViewUser";
 import HelpCategoryList from "../pages/HelpSupport/CategoryList";
-import Ticket from "../pages/Task/Ticket";
+import Ticket from "../pages/HelpSupport/Ticket";
 import ViewTask from "../pages/Task/ViewTask";
+import Task from "../pages/Task/Ticket";
+import TicketDetails from "../pages/HelpSupport/TicketDetails";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -30,13 +32,15 @@ const routes: RouteObject[] = [
       { path: "/add-category", element: <AddCategory /> },
       { path: "/kyc-list", element: <KycList /> },
       { path: "/helpandsupport-list", element: <HelpCategoryList /> },
+      { path: "/ticket", element: <Ticket /> },
+      { path: "/tickets-details/:id", element: <TicketDetails /> },
 
       // { path: "/view-subcategory/:id", element: <SubCategoryList /> },
       // { path: "/view-QuestionAnswer/:id", element: <ViewQuestionAnswerList /> },
       // { path: "/Add-QuestionAnswer/:id", element: <AddQuestionAndAnswer /> },
-      { path: "/task-list", element: <Ticket /> },
+      { path: "/task-list", element: <Task /> },
       { path: "/view-task", element: <ViewTask /> },
-      // { path: "/tickets-details/:id", element: <TicketDetails /> },
+     
     ],
   },
   { path: "/", element: <SignIn /> },

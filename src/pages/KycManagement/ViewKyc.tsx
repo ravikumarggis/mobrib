@@ -18,7 +18,10 @@ const KycView: React.FC = () => {
   const location = useLocation();
   const { kycDetail } = location.state || {};
 
-  const isPending = statusText(kycDetail?.kycStatus) === "Pending";
+  console.log(kycDetail,"kycDetailkycDetail");
+  
+
+  const isPending = statusText(kycDetail?.status) === "verified";
 
   const {
     mutate: ApproveRejectKyc,
@@ -39,7 +42,7 @@ const KycView: React.FC = () => {
 
     ApproveRejectKyc({
       _id: kycDetail._id,
-      action: "VERIFIED",
+      status: "verified",
     });
   };
 
@@ -48,8 +51,8 @@ const KycView: React.FC = () => {
 
     ApproveRejectKyc({
       _id: kycDetail._id,
-      action: "REJECTED",
-      rejectionReason: TextMessage,
+      status: "rejected",
+      message: TextMessage,
     });
   };
 
@@ -85,73 +88,43 @@ const KycView: React.FC = () => {
             />
             <DetailRow
               label="PAN Number"
-              value={kycDetail?.panNumber || "--"}
+              value={kycDetail?.
+                panDetails?.panNumber || "--"}
             />
             <DetailRow
               label="Aadhaar Number"
-              value={kycDetail?.aadhaarNumber || "--"}
+              value={kycDetail?.adharDetails?.adharNumber || "--"}
             />
-            <DetailRow label="Address" value={kycDetail?.address || "--"} />
-            <DetailRow label="City" value={kycDetail?.city || "--"} />
-            <DetailRow label="State" value={kycDetail?.state || "--"} />
-            <DetailRow label="Pincode" value={kycDetail?.areaPincode || "--"} />
-            <DetailRow label="About User" value={kycDetail?.aboutUs || "--"} />
+            <DetailRow label="Address" value={kycDetail?.adharDetails?.address || "--"} />
+          
+  
             <DetailRow
               label="KYC Status"
-              value={statusText(kycDetail?.kycStatus)}
-              color={statusColor(kycDetail?.kycStatus)}
+              value={statusText(kycDetail?.status)}
+              color={statusColor(kycDetail?.status)}
             />
-                {kycDetail?.rejectionReason && (
+                {kycDetail?.message && (
                           <DetailRow
                             label="Reason"
-                            value={kycDetail.rejectionReason}
-                            color={statusColor(kycDetail?.kycStatus)}
+                            value={kycDetail.message}
+                            color={statusColor(kycDetail?.status)}
                           />
                         )}
           </div>
 
-          {/* DOCUMENT IMAGES */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-            <div>
-              <p className="text-sm mb-1 dark:text-white">PAN Card</p>
-              <img
-                src={kycDetail?.panFrontUrl}
-                alt="PAN"
-                className="rounded border h-40 w-full object-cover cursor-pointer hover:opacity-80"
-                onClick={() => setPreviewImage(kycDetail?.panFrontUrl)}
-              />
-            </div>
-
-            <div>
-              <p className="text-sm mb-1 dark:text-white">Aadhaar Front</p>
-              <img
-                src={kycDetail?.aadhaarFrontUrl}
-                alt="Aadhaar Front"
-                className="rounded border h-40 w-full object-cover cursor-pointer hover:opacity-80"
-                onClick={() => setPreviewImage(kycDetail?.aadhaarFrontUrl)}
-              />
-            </div>
-
-            <div>
-              <p className="text-sm mb-1 dark:text-white">Aadhaar Back</p>
-              <img
-                src={kycDetail?.aadhaarBackUrl}
-                alt="Aadhaar Back"
-                className="rounded border h-40 w-full object-cover cursor-pointer hover:opacity-80"
-                onClick={() => setPreviewImage(kycDetail?.aadhaarBackUrl)}
-              />
-            </div>
-          </div>
+        
         </div>
 
         {/* ACTION BUTTONS */}
         <div className="flex justify-end gap-4 pb-6">
-          <Button disabled={!isPending} onClick={handleAccept}>
+          <Button 
+          // disabled={isPending}
+           onClick={handleAccept}>
             Accept
           </Button>
 
           <Button
-            disabled={!isPending}
+            // disabled={isPending}
             onClick={() => {
               setIsVerifyOrRejected("REJECT");
               setIsShowTextArea(true);

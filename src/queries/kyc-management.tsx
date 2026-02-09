@@ -15,8 +15,8 @@ type FilterType = {
 };
 
 interface VerifiedOrRejectedKycPlayload {
-  id: number;
-  action: string;
+  _id: number;
+  status: string;
   message?: string;
   transactionId?: string;
   modeType?: string;
@@ -75,7 +75,7 @@ const handleApproveRejectKyc = async (
 ) => {
   try {
     const response = await api({
-      url: "/admin/approveRejectKyc",
+      url: "/admin/acceptRejectKyc",
       method: "PUT",
       data: data,
     });

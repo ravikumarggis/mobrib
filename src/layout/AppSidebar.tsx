@@ -134,8 +134,8 @@ const navItems: NavItem[] = [
     name: "Help And Support",
     subItems: [
       { name: "Reason List", path: "/helpandsupport-list", pro: false, },
-      // { name: "Task list", path: "/task-list", pro: false },
-      // { name: "Support Contact (Website)", path: "/support-contact-us" }
+      { name: "Ticket list", path: "/ticket", pro: false },
+     
     ],
     isRead: true,
     isWrite: false,

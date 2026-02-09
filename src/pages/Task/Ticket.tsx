@@ -38,7 +38,7 @@ interface InrWithdrawListRowData {
 
 const columnHelper = createColumnHelper<InrWithdrawListRowData>();
 
-const Ticket = () => {
+const Task = () => {
   const navigate = useNavigate();
   const { setParam, searchParams, removeParam } = useSetSearchParam();
   const [filter, setFilter] = useState({ page: searchParams.get("page") });
@@ -191,4 +191,4 @@ const Ticket = () => {
   );
 };
 
-export default Ticket;
+export default Task;

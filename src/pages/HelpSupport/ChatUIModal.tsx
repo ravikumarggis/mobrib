@@ -4,7 +4,6 @@ import { useTicketChat } from "../../queries/tickets";
 import { IoClose } from "react-icons/io5";
 import moment from "moment";
 import ImagePreviewModal from "../../components/modal/ImagePreviewModal";
-import useModulePermissions from "../../queries/subAdmin";
 import { DateTimeFormates } from "../../utils";
 
 interface Message {
@@ -41,7 +40,6 @@ const ChatUIModal: React.FC<ChatUIProps> = ({
   const [ImageUrl, setImageUrl] = useState<string | undefined>("");
   const { data: UplodaImageData, mutate: UploadIamge } = useUploadImage();
   const { mutate, data: ChatMassage } = useTicketChat();
-  const { write } = useModulePermissions("Help And Support");
 
   const handleSend = () => {
     if (!newMessage.trim() && !imagePreview) return;
@@ -180,7 +178,7 @@ const ChatUIModal: React.FC<ChatUIProps> = ({
                 </button>
               </div>
             )}
-            {write && (
+           
               <div className="flex items-center gap-2 dark:text-white">
                 <input
                   type="file"
@@ -189,9 +187,9 @@ const ChatUIModal: React.FC<ChatUIProps> = ({
                   className="text-sm"
                 />
               </div>
-            )}
+           
 
-            {write && (
+           
               <div className="flex items-center gap-2 dark:text-white">
                 {/* <input
                   type="text"
@@ -224,7 +222,7 @@ const ChatUIModal: React.FC<ChatUIProps> = ({
                   Send
                 </button>
               </div>
-            )}
+        
           </div>
         )}
       </div>

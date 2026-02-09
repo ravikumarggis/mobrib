@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BackComponent from "../../components/backcomponent/BackComponent";
 import {
   useTicketsDetails,
-  useTicketsList,
+  
   useTicketStatus,
 } from "../../queries/tickets";
 import ChatUI from "./ChatUI";
@@ -13,7 +13,6 @@ import ToggleSwitchButton from "../../components/form/ToggleSwitchButton";
 import LoadingScreen from "../../components/common/LoadingScreen";
 import { IoMdEye } from "react-icons/io";
 import ChatUIModal from "./ChatUIModal";
-import useModulePermissions from "../../queries/subAdmin";
 import CopyButton from "../../components/common/CopyButton";
 
 interface CloseTicketData {
@@ -30,7 +29,6 @@ const TicketDetails: React.FC = () => {
   const [ticketStatus, setticketStatus] = useState("");
   const [OtherQueryData, setOtherQueryData] = useState([]);
   const [isOpenChatUIModal, setisOpenChatUIModal] = useState(false);
-  const { write } = useModulePermissions("Help And Support");
 
   const { id } = useParams<{ id: string | undefined }>();
   const { data: TicketDetails, isLoading } = useTicketsDetails(id);
@@ -159,7 +157,7 @@ const TicketDetails: React.FC = () => {
                     <p className="flex justify-end">
                       <ToggleSwitchButton
                         checked={isActiveInactive}
-                        disabled={write ? false : true}
+                        // disabled={write ? false : true}
                         onChange={() =>
                           handleactive(
                             TicketDetails?.data?.result?.ticketStatus,
@@ -226,9 +224,11 @@ const TicketDetails: React.FC = () => {
               Communication
             </h2>
             <div>
+
+              {console.log(TicketDetails?.data?.result,"hyyugyugyuy")}
               <ChatUI
                 // ticketId={TicketDetails?.data?.result?.id}
-                ticketId={TicketDetails?.data?.result?.ticketId}
+                ticketId={TicketDetails?.data?.result?._id}
                 isActiveInactive={isActiveInactive}
                 IsGuestUser={TicketDetails?.data?.result?.isGuestUser}
               />
