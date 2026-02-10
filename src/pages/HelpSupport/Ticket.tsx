@@ -132,18 +132,18 @@ const Ticket: React.FC = () => {
 
     }),
 
-    // columnHelper.accessor("Action", {
-    //   header: "Action",
-    //   cell: ({ row }) => {
-    //     return (
-    //       <Button
-    //         onClick={() => navigate(`/tickets-details/${row.original._id}`)}
-    //       >
-    //         View
-    //       </Button>
-    //     );
-    //   },
-    // }),
+    columnHelper.accessor("Action", {
+      header: "Action",
+      cell: ({ row }) => {
+        return (
+          <Button
+            onClick={() => navigate(`/tickets-details/${row.original._id}`)}
+          >
+            View
+          </Button>
+        );
+      },
+    }),
   ];
 
   const table = useReactTable({

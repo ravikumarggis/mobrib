@@ -22,6 +22,7 @@ interface CloseTicketData {
 
 const TicketDetails: React.FC = () => {
   const [showConfirmationModal, setshowConfirmationModal] = useState(false);
+  const { id } = useParams<{ id: string | undefined }>();
   const [isActiveInactive, setIsActiveInactive] = useState(false);
   const [clostTicketData, setclostTicketData] = useState<CloseTicketData>({ status: "", ticketId: null, });
   const [selectOtherQueryTicketID, setselectOtherQueryTicketID] = useState("");
@@ -30,11 +31,12 @@ const TicketDetails: React.FC = () => {
   const [OtherQueryData, setOtherQueryData] = useState([]);
   const [isOpenChatUIModal, setisOpenChatUIModal] = useState(false);
 
-  const { id } = useParams<{ id: string | undefined }>();
+ 
   const { data: TicketDetails, isLoading } = useTicketsDetails(id);
   const { mutate } = useTicketStatus();
   // const { data: ticketList } = useTicketsList();
 
+  console.log(id,"messagesmessages");
 
 
 
@@ -54,18 +56,36 @@ const TicketDetails: React.FC = () => {
     }
   }, [TicketDetails]);
 
-  const handleactive = (TicketStatus: string, ticketId: number | null) => {
-    if (!showConfirmationModal) {
-      setshowConfirmationModal(true);
-      setclostTicketData({
-        status:
-          TicketStatus === "pending" || TicketStatus === "in-process"
-            ? "resolved"
-            : "pending",
-        ticketId: ticketId,
-      });
-    }
+  // const handleactive = (TicketStatus: string, ticketId: number | null) => {
+
+  //   console.log(Number(ticketId),id,"yuguyyubbyu");
+    
+  //   if (!showConfirmationModal) {
+  //     setshowConfirmationModal(true);
+  //     setclostTicketData({
+  //       status:
+  //         TicketStatus === "pending" || TicketStatus === "in-process"
+  //           ? "resolved"
+  //           : "pending",
+  //       ticketId: Number(ticketId),
+  //     });
+  //   }
+  // };
+
+  const handleactive = ( ticketId: number | null,ticketStatus: string) => {
+    if (!ticketId) return;
+  
+    setclostTicketData({
+      status:
+        ticketStatus === "pending" || ticketStatus === "in-process"
+          ? "resolved"
+          : "pending",
+      ticketId: Number(ticketId),
+    });
+  
+    setshowConfirmationModal(true);
   };
+  
 
   return (
     <div>
@@ -130,8 +150,8 @@ const TicketDetails: React.FC = () => {
                   </div>
                   <div className="text-end">
                     <p className="dark:text-white">
-                      {TicketDetails?.data?.result?.ticketId
-                        ? TicketDetails?.data?.result?.ticketId
+                      {TicketDetails?.data?.result?._id
+                        ? TicketDetails?.data?.result?._id
                         : "--"}
                     </p>
                     <p className="dark:text-white">
@@ -160,9 +180,9 @@ const TicketDetails: React.FC = () => {
                         // disabled={write ? false : true}
                         onChange={() =>
                           handleactive(
+                            TicketDetails?.data?.result?._id,
                             TicketDetails?.data?.result?.ticketStatus,
                             // TicketDetails?.data?.result?.ticketId
-                            Number(id)
                           )
                         }
                       />
@@ -225,7 +245,7 @@ const TicketDetails: React.FC = () => {
             </h2>
             <div>
 
-              {console.log(TicketDetails?.data?.result,"hyyugyugyuy")}
+            
               <ChatUI
                 // ticketId={TicketDetails?.data?.result?.id}
                 ticketId={TicketDetails?.data?.result?._id}

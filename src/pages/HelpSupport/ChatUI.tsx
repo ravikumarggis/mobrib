@@ -38,6 +38,8 @@ const ChatUI: React.FC<ChatUIProps> = ({
   const { mutate, data: ChatMassageData } = useTicketChat();
   const { data: TickeDetailsData } = useTicketsDetails(id);
 
+  
+
   const handleSend = () => {
     if (!newMessage.trim() && !imagePreview) return;
 
@@ -81,8 +83,8 @@ const ChatUI: React.FC<ChatUIProps> = ({
   useEffect(() => {
     if (ChatMassageData) {
       const ChatHistroy =
-        ChatMassageData?.data?.result?.[1]?.[0]?.conversations?.map(
-          (item: any) => ({
+        ChatMassageData?.data?.result?.conversations?.map(
+          (item?: any) => ({
             content: item?.image || item?.message,
             type: item?.image ? "image" : "text",
             time: DateTimeFormates(item?.time),
