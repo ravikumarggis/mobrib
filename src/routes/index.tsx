@@ -40,6 +40,9 @@ const routes: RouteObject[] = [
       // { path: "/Add-QuestionAnswer/:id", element: <AddQuestionAndAnswer /> },
       { path: "/task-list", element: <Task /> },
       { path: "/view-task", element: <ViewTask /> },
+      { path: "/withdraw-inr", element: <WithdrawInr /> },
+
+      { path: "/withdraw-view", element: <WithDrawCryptoView /> },
      
     ],
   },

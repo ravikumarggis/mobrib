@@ -100,13 +100,13 @@ const navItems: NavItem[] = [
     isRead: true,
     isWrite: true,
   },
-  // {
-  //   icon: <PiHandWithdrawBold />,
-  //   name: "Withdrawal Management",
-  //   path: "/withdraw-inr",
-  //   isRead: true,
-  //   isWrite: true,
-  // },
+  {
+    icon: <PiHandWithdrawBold />,
+    name: "Withdrawal Management",
+    path: "/withdraw-inr",
+    isRead: true,
+    isWrite: true,
+  },
   {
     icon: <MdManageAccounts />,
     name: "Category Management",

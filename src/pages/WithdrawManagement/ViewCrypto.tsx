@@ -94,10 +94,10 @@ const WithDrawCryptoView: React.FC = () => {
               <CopyButton textToCopy={withdrawDetail?._id} />
             </div>
 
-            <DetailRow label="A/C Number" value={withdrawDetail?.bank?.accountNumber || "--"} />
-            <DetailRow label="Bank Name" value={withdrawDetail?.bank?.bankName || "--"} />
-            <DetailRow label="IFSC Code" value={withdrawDetail?.bank?.ifscCode || "--"} />
-            <DetailRow label="Holder Name" value={withdrawDetail?.bank?.holderName || "--"} />
+            <DetailRow label="A/C Number" value={withdrawDetail?.bank[0]?.bankDetails?.accountNumber || "--"} />
+            <DetailRow label="Bank Name" value={withdrawDetail?.bank[0]?.bankDetails?.bankName || "--"} />
+            <DetailRow label="IFSC Code" value={withdrawDetail?.bank[0]?.bankDetails?.ifscCode || "--"} />
+            <DetailRow label="Holder Name" value={withdrawDetail?.bank[0]?.bankDetails?.holderName || "--"} />
 
             <DetailRow
               label="Status"
