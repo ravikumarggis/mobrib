@@ -53,6 +53,32 @@ export const getTotaluserCount = async () => {
     return error?.response;
   }
 };
+export const useGetDashboardCount = () => {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: () => getDashboardCount(),
+    select(data) {
+      if (data?.data?.responseCode === 200) {
+        return data?.data?.result;
+      } else {
+        return [];
+      }
+    },
+  });
+};
+
+export const getDashboardCount = async () => {
+  try {
+    const response = await api({
+      url: "/admin/dashboard",
+      method: "GET",
+    });
+    return response;
+  } catch (error: any) {
+    console.error("API error:", error);
+    return error?.response;
+  }
+};
 
 //  ************************************** deposit ************************************************************************
 export const useGetTotalDepsitWithdrawalCount = () => {

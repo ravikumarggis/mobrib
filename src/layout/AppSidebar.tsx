@@ -95,6 +95,13 @@ const navItems: NavItem[] = [
   // },
   {
     icon: <FaUserAstronaut />,
+    name: "Dashboard",
+    path: "/",
+    isRead: true,
+    isWrite: true,
+  },
+  {
+    icon: <FaUserAstronaut />,
     name: "User Management",
     path: "/user-list",
     isRead: true,
@@ -128,6 +135,17 @@ const navItems: NavItem[] = [
     isRead: true,
     isWrite: true,
   },
+  {
+    icon: <MdOutlineContentPaste />,
+    name: "Content Management",
+    subItems: [
+      { name: "FAQ's", path: "/faq-list" },
+      // { name: "Add Feedback Que", path: "/feedback-list" },
+    
+    ],
+    isRead: true,
+    isWrite: true,
+  },
 
   {
     icon: <BiSupport />,
@@ -138,7 +156,7 @@ const navItems: NavItem[] = [
      
     ],
     isRead: true,
-    isWrite: false,
+    isWrite: true,
   },
 ];
 
@@ -456,7 +474,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ searchModule }) => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-       <Link to="/user-list">
+       <Link to="/">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img

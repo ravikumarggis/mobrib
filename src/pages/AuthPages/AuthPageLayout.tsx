@@ -11,7 +11,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   if (isLoggedIn()) {
-    return <Navigate to={"/user-list"} />;
+    return <Navigate to={"/"} />;
   }
   return (
     <div className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">

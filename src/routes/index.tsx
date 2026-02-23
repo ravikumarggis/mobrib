@@ -15,12 +15,16 @@ import Ticket from "../pages/HelpSupport/Ticket";
 import ViewTask from "../pages/Task/ViewTask";
 import Task from "../pages/Task/Ticket";
 import TicketDetails from "../pages/HelpSupport/TicketDetails";
+import AddUpdateFAQ from "../pages/FAQManagement/AddUpdateFAQ";
+import FAQList from "../pages/FAQManagement/FAQList";
+import Dashboard from "../pages/Dashboard";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
   {
     element: <AppLayout />,
     children: [
+      { path: "/", element: <Dashboard /> },
       { path: "/withdraw-inr", element: <WithdrawInr /> },
 
       { path: "/withdraw-view", element: <WithDrawCryptoView /> },
@@ -43,6 +47,8 @@ const routes: RouteObject[] = [
       { path: "/withdraw-inr", element: <WithdrawInr /> },
 
       { path: "/withdraw-view", element: <WithDrawCryptoView /> },
+      { path: "/add-update-faq", element: <AddUpdateFAQ /> },
+      { path: "/faq-list", element: <FAQList /> },
      
     ],
   },
