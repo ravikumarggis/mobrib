@@ -41,7 +41,7 @@ export default function SignInForm() {
         toast.success(data?.data?.responseMessage);
         // localStorage.setItem("token", data?.data?.result?.token);
         sessionStorage.setItem("token", data?.data?.result?.token);
-        navigate("/");
+        navigate("/dashboard");
       } else {
         toast.error(data?.data?.responseMessage);
       }

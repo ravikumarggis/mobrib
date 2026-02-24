@@ -24,7 +24,7 @@ const routes: RouteObject[] = [
   {
     element: <AppLayout />,
     children: [
-      { path: "/", element: <Dashboard /> },
+      { path: "/dashboard", element: <Dashboard /> },
       { path: "/withdraw-inr", element: <WithdrawInr /> },
 
       { path: "/withdraw-view", element: <WithDrawCryptoView /> },

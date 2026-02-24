@@ -96,7 +96,7 @@ const navItems: NavItem[] = [
   {
     icon: <FaUserAstronaut />,
     name: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     isRead: true,
     isWrite: true,
   },
@@ -474,7 +474,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ searchModule }) => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-       <Link to="/">
+       <Link to="/dashboard">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img
