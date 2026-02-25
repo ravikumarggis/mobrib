@@ -9,10 +9,15 @@ const Dashboard = () => {
      
     const stats = [
       { label: "Total Users", value: data?.totalUserCount },
-      { label: "Total Task", value: data?.totalTaskerCount },
-      { label: "Total Hirer", value: data?.totalHirerCount },
-      { label: "Total Ticket", value: data?.openTicketCount },
-      { label: "Active Task", value: data?.activeTaskCount },
+      { label: "Total Taskers", value: data?.totalTaskerCount },
+      { label: "Total Hirers", value: data?.totalHirerCount },
+      { label: "Total Active Tickets", value: data?.openTicketCount },
+      { label: "Active Tasks", value: data?.activeTaskCount },
+      { label: "Cancelled Tasks Revenue", value: data?.canclledTaskRenenue?.totalAmount },
+      { label: "Cancelled Tasks Count", value: data?.canclledTaskRenenue?.totalCount },
+      { label: "Completed Tasks Revenue", value: data?.completedTaskRenenue?.totalAmount },
+      { label: "Completed Tasks Count", value: data?.completedTaskRenenue?.totalCount },
+     
     ];
   
     return (
