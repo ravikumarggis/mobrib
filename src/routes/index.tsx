@@ -18,6 +18,7 @@ import TicketDetails from "../pages/HelpSupport/TicketDetails";
 import AddUpdateFAQ from "../pages/FAQManagement/AddUpdateFAQ";
 import FAQList from "../pages/FAQManagement/FAQList";
 import Dashboard from "../pages/Dashboard";
+import FeeStructure from "../pages/FeeStructure";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -49,6 +50,9 @@ const routes: RouteObject[] = [
       { path: "/withdraw-view", element: <WithDrawCryptoView /> },
       { path: "/add-update-faq", element: <AddUpdateFAQ /> },
       { path: "/faq-list", element: <FAQList /> },
+
+
+      { path: "/fee-structure", element: <FeeStructure /> },
      
     ],
   },
