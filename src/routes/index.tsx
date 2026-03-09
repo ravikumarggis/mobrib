@@ -19,6 +19,9 @@ import AddUpdateFAQ from "../pages/FAQManagement/AddUpdateFAQ";
 import FAQList from "../pages/FAQManagement/FAQList";
 import Dashboard from "../pages/Dashboard";
 import FeeStructure from "../pages/FeeStructure";
+import ContentMangement from "../pages/SataticContentMangment/ContentMangement";
+import ViewStaticContent from "../pages/SataticContentMangment/ViewStaticContent";
+import EditStaticContent from "../pages/SataticContentMangment/EditStaticContent";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -53,6 +56,10 @@ const routes: RouteObject[] = [
 
 
       { path: "/fee-structure", element: <FeeStructure /> },
+
+      { path: "/static-content-mangment", element: <ContentMangement /> },
+      { path: "/view-static-content/:id", element: <ViewStaticContent /> },
+      { path: "/edit-static-content/:id/:type", element: <EditStaticContent /> },
      
     ],
   },
