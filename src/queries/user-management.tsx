@@ -18,7 +18,8 @@ type FilterType = {
 
 interface VerifiedOrRejectedUserPlayload {
   _id: number;
-  status: string;
+  userblock: any;
+  userSuspend: any;
  
 }
 
@@ -70,8 +71,11 @@ const handleApproveRejectCrptoWithdraw = async (
   data: VerifiedOrRejectedUserPlayload
 ) => {
   try {
+
+    console.log(data,"nknunnhiknikn");
+    
     const response = await api({
-      url: "/admin/blockDeleteUser",
+      url: "/admin/blockSuspendUser",
       method: "PUT",
       data: data,
     });

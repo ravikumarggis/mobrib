@@ -42,6 +42,7 @@ interface InrWithdrawListRowData {
     userStatus: string;
   createdAt: string;
   updatedAt: string;
+  warningCount: string;
   role: string;
   Action: any;
 }
@@ -129,6 +130,10 @@ const UserList = () => {
       },
     }),
 
+    columnHelper.accessor("warningCount", {
+      header: "Warning Count",
+      cell: (info) => info.getValue() || "0",
+    }),
     columnHelper.accessor("role", {
       header: "User Type",
       cell: (info) => info.getValue() || "--",

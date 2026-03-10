@@ -22,6 +22,7 @@ import FeeStructure from "../pages/FeeStructure";
 import ContentMangement from "../pages/SataticContentMangment/ContentMangement";
 import ViewStaticContent from "../pages/SataticContentMangment/ViewStaticContent";
 import EditStaticContent from "../pages/SataticContentMangment/EditStaticContent";
+import SendNotification from "../pages/Notification/SendNotification";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -60,6 +61,7 @@ const routes: RouteObject[] = [
       { path: "/static-content-mangment", element: <ContentMangement /> },
       { path: "/view-static-content/:id", element: <ViewStaticContent /> },
       { path: "/edit-static-content/:id/:type", element: <EditStaticContent /> },
+      { path: "/send-notification", element: <SendNotification /> },
      
     ],
   },

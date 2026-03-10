@@ -7,7 +7,7 @@ import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { AiTwotoneBank } from "react-icons/ai";
 import { LiaUsersCogSolid } from "react-icons/lia";
-import { BiCalculator, BiSupport, BiTask, BiTerminal } from "react-icons/bi";
+import { BiCalculator, BiNotification, BiSupport, BiTask, BiTerminal } from "react-icons/bi";
 import { MdOutlineContentPaste } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
 import { useProfile } from "../queries/auth";
@@ -139,6 +139,13 @@ const navItems: NavItem[] = [
     icon: <BiCalculator />,
     name: "Fee Management",
     path: "/fee-structure",
+    isRead: true,
+    isWrite: true,
+  },
+  {
+    icon: <BiNotification />,
+    name: "Notification",
+    path: "/send-notification",
     isRead: true,
     isWrite: true,
   },

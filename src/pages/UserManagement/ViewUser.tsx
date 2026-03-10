@@ -35,6 +35,7 @@ const ViewUser: React.FC = () => {
   useEffect(() => {
     if (userDetail) {
       setIsBlocked(userDetail?.userblock || false);
+      setIsSuspended(userDetail?.userSuspend || false);
     }
   }, [userDetail]);
 
@@ -43,19 +44,23 @@ const ViewUser: React.FC = () => {
 
     ApproveRejectUser({
       _id: userDetail._id,
-      status: value,
+      userblock: value,
+      userSuspend:  userDetail?.userSuspend
     });
   };
 
   const handleSuspendToggle = (value: boolean) => {
     setIsSuspended(value);
+    
+console.log(value,"valuevaluevalue");
 
-    if (value) {
+  
       ApproveRejectUser({
         _id: userDetail._id,
-        status: "DELETE",
+        userblock: userDetail?.userblock,
+        userSuspend: value,
       });
-    }
+   
   };
 
   useEffect(() => {
