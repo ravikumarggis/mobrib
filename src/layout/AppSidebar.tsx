@@ -7,7 +7,13 @@ import { ChevronDownIcon, GridIcon, HorizontaLDots } from "../icons";
 import { useSidebar } from "../context/SidebarContext";
 import { AiTwotoneBank } from "react-icons/ai";
 import { LiaUsersCogSolid } from "react-icons/lia";
-import { BiCalculator, BiNotification, BiSupport, BiTask, BiTerminal } from "react-icons/bi";
+import {
+  BiCalculator,
+  BiNotification,
+  BiSupport,
+  BiTask,
+  BiTerminal,
+} from "react-icons/bi";
 import { MdOutlineContentPaste } from "react-icons/md";
 import { GiTrophyCup } from "react-icons/gi";
 import { useProfile } from "../queries/auth";
@@ -145,24 +151,17 @@ const navItems: NavItem[] = [
   {
     icon: <BiNotification />,
     name: "Notification",
-    path: "/send-notification",
+    path: "/notification",
     isRead: true,
     isWrite: true,
   },
-  {
-    icon: <BiTerminal />,
-    name: "Term & Condition",
-    path: "/static-content-mangment",
-    isRead: true,
-    isWrite: true,
-  },
+
   {
     icon: <MdOutlineContentPaste />,
     name: "Content Management",
     subItems: [
       { name: "FAQ's", path: "/faq-list" },
-      // { name: "Add Feedback Que", path: "/feedback-list" },
-    
+      { name: "Term & Condition", path: "/static-content-mangment" },
     ],
     isRead: true,
     isWrite: true,
@@ -172,15 +171,13 @@ const navItems: NavItem[] = [
     icon: <BiSupport />,
     name: "Help And Support",
     subItems: [
-      { name: "Reason List", path: "/helpandsupport-list", pro: false, },
+      { name: "Reason List", path: "/helpandsupport-list", pro: false },
       { name: "Ticket list", path: "/ticket", pro: false },
-     
     ],
     isRead: true,
     isWrite: true,
   },
 ];
-
 
 interface AppSidebarProps {
   searchModule: string;
@@ -495,7 +492,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ searchModule }) => {
           !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
         }`}
       >
-       <Link to="/dashboard">
+        <Link to="/dashboard">
           {isExpanded || isHovered || isMobileOpen ? (
             <>
               <img
@@ -519,7 +516,7 @@ const AppSidebar: React.FC<AppSidebarProps> = ({ searchModule }) => {
               height={32}
             />
           )}
-        </Link>  
+        </Link>
       </div>
       <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
         <nav className="mb-6">

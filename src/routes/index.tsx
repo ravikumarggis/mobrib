@@ -23,6 +23,8 @@ import ContentMangement from "../pages/SataticContentMangment/ContentMangement";
 import ViewStaticContent from "../pages/SataticContentMangment/ViewStaticContent";
 import EditStaticContent from "../pages/SataticContentMangment/EditStaticContent";
 import SendNotification from "../pages/Notification/SendNotification";
+import NotificationList from "../pages/Notification/NotificationList";
+import NotificationView from "../pages/Notification/NotificationView";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -36,7 +38,7 @@ const routes: RouteObject[] = [
       { path: "/kyc-view", element: <KycView /> },
       { path: "/user-list", element: <UserList /> },
       { path: "/view-user", element: <ViewUser /> },
-    
+
       { path: "/category-list", element: <CategoryList /> },
       { path: "/add-category", element: <AddCategory /> },
       { path: "/kyc-list", element: <KycList /> },
@@ -55,14 +57,17 @@ const routes: RouteObject[] = [
       { path: "/add-update-faq", element: <AddUpdateFAQ /> },
       { path: "/faq-list", element: <FAQList /> },
 
-
       { path: "/fee-structure", element: <FeeStructure /> },
 
       { path: "/static-content-mangment", element: <ContentMangement /> },
       { path: "/view-static-content/:id", element: <ViewStaticContent /> },
-      { path: "/edit-static-content/:id/:type", element: <EditStaticContent /> },
+      {
+        path: "/edit-static-content/:id/:type",
+        element: <EditStaticContent />,
+      },
       { path: "/send-notification", element: <SendNotification /> },
-     
+      { path: "/notification", element: <NotificationList /> },
+      { path: "/view-notification", element: <NotificationView /> },
     ],
   },
   { path: "/", element: <SignIn /> },

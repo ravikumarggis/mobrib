@@ -27,7 +27,6 @@ const QueryStatus = [
   { id: 2, name: "Resolved" },
 ];
 
-
 interface TableFilterProps {
   filter: any;
   setFilter: any;
@@ -286,7 +285,21 @@ const TableFilter: React.FC<TableFilterProps> = ({
           </div>
         </div>
       )}
-       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-x-4 gap-y-2">
+      {type == "NotificationList" && (
+        <div className="w-full ">
+          <div className="flex  justify-end items-end  ">
+            <Button
+              className=" py-3"
+              onClick={() => {
+                navigate("/send-notification");
+              }}
+            >
+              Send Notification
+            </Button>
+          </div>
+        </div>
+      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-x-4 gap-y-2">
         {type == "ticket" && (
           <Fragment>
             <div className="w-full">
@@ -311,7 +324,7 @@ const TableFilter: React.FC<TableFilterProps> = ({
                 />
               </div>
             </div>
-          
+
             <div className="w-full">
               <Listbox
                 onChange={(value) => {
@@ -322,15 +335,13 @@ const TableFilter: React.FC<TableFilterProps> = ({
                       value?.name === "Pending"
                         ? "pending"
                         : value?.name === "Resolved"
-                          ? "resolved"
-                          : value?.name === "In-Process"
-                            ? "in-process"
-                            : "",
-                  }))
+                        ? "resolved"
+                        : value?.name === "In-Process"
+                        ? "in-process"
+                        : "",
+                  }));
                   filterData?.setIsDownloadCsv(false);
-                }
-
-                }
+                }}
                 value={filter?.filterBy}
               >
                 <Label>Query Status</Label>
@@ -355,7 +366,6 @@ const TableFilter: React.FC<TableFilterProps> = ({
               </Listbox>
             </div>
 
-
             <div className="w-full">
               <DatePicker
                 id="from-date-picker"
@@ -365,7 +375,10 @@ const TableFilter: React.FC<TableFilterProps> = ({
                 defaultDate={filter.fromDate}
                 maxDate={filter.toDate ? filter.toDate : undefined}
                 onChange={(_, dateStr) => {
-                  if (filter.toDate && parseDate(dateStr) > parseDate(filter.toDate)) {
+                  if (
+                    filter.toDate &&
+                    parseDate(dateStr) > parseDate(filter.toDate)
+                  ) {
                     setFilter((p: any) => ({
                       ...p,
                       page: 1,
@@ -373,7 +386,11 @@ const TableFilter: React.FC<TableFilterProps> = ({
                       toDate: undefined,
                     }));
                   } else {
-                    setFilter((p: any) => ({ ...p, page: 1, fromDate: dateStr }));
+                    setFilter((p: any) => ({
+                      ...p,
+                      page: 1,
+                      fromDate: dateStr,
+                    }));
                   }
 
                   removeParamFn();
@@ -390,7 +407,10 @@ const TableFilter: React.FC<TableFilterProps> = ({
                 defaultDate={filter.toDate}
                 minDate={filter.fromDate ? filter.fromDate : undefined}
                 onChange={(_, dateStr) => {
-                  if (filter.fromDate && parseDate(dateStr) < parseDate(filter.fromDate)) {
+                  if (
+                    filter.fromDate &&
+                    parseDate(dateStr) < parseDate(filter.fromDate)
+                  ) {
                     setFilter((p: any) => ({
                       ...p,
                       page: 1,
@@ -417,12 +437,10 @@ const TableFilter: React.FC<TableFilterProps> = ({
               >
                 Reset
               </Button>
-
-            
             </div>
           </Fragment>
         )}
-      </div >
+      </div>
       <div className="w-full mb-4 p-0 grid grid-cols-8 2xl:grid-cols-12 gap-4"></div>
     </>
   );

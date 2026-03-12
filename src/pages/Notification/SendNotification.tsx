@@ -33,7 +33,7 @@ const SendNotification: React.FC = () => {
   const navigate = useNavigate();
 
   const { mutate, isPending } = useSendNotification(() =>
-    navigate("/send-notification")
+    navigate("/notification")
   );
 
   const formik = useFormik<NotificationPayload>({
@@ -60,7 +60,7 @@ const SendNotification: React.FC = () => {
 
   return (
     <div className="flex-row w-full justify-center items-center ">
-      <BackComponent text="Send Notification" backpageroute="/" />
+      <BackComponent text="Send Notification" backpageroute="/notification" />
 
       <div className="mt-10 space-y-6 w-full justify-center items-center ">
         {/* ROLE */}
