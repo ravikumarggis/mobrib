@@ -9,6 +9,7 @@ import { AiTwotoneBank } from "react-icons/ai";
 import { LiaUsersCogSolid } from "react-icons/lia";
 import {
   BiCalculator,
+  BiDesktop,
   BiNotification,
   BiSupport,
   BiTask,
@@ -152,6 +153,13 @@ const navItems: NavItem[] = [
     icon: <BiNotification />,
     name: "Notification",
     path: "/notification",
+    isRead: true,
+    isWrite: true,
+  },
+  {
+    icon: <BiDesktop />,
+    name: "Feedback Management",
+    path: "/feedback",
     isRead: true,
     isWrite: true,
   },
