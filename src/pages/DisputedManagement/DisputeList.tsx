@@ -22,10 +22,11 @@ interface InrWithdrawListRowData {
   id: string;
 
   rating: any;
-  rater: string;
+  poster: string;
   ratedUser: string;
-  comment: any;
+  requestedResolution: any;
 
+  disputeStatus: string;
   createdAt: string;
 
   Action: any;
@@ -87,43 +88,26 @@ const DisputeList = () => {
       },
     },
 
-    columnHelper.accessor("rating", {
-      header: "Rate",
-      cell: (info) => info?.row?.original?.rating ?? "--",
+   
+    columnHelper.accessor("poster", {
+      header: "Poster Name",
+      cell: (info) => info?.row?.original?.poster?.name ?? "--",
+    }),
+    columnHelper.accessor("tasker", {
+      header: "Tasker Name",
+      cell: (info) => info?.row?.original?.tasker?.name ?? "--",
     }),
 
-    columnHelper.accessor("rater", {
-      header: "Rater",
-      cell: (info) => info?.row?.original?.rater?.[0]?.name ?? "--",
+    columnHelper.accessor("disputeStatus", {
+      header: "Dispute Status",
+      cell: (info) => info?.row?.original?.disputeStatus ?? "--",
+    }),
+ columnHelper.accessor("requestedResolution", {
+      header: "Requested Resolution",
+      cell: (info) => info?.row?.original?.requestedResolution ?? "--",
     }),
 
-    columnHelper.accessor("ratedUser", {
-      header: "Rated User",
-      cell: (info) => info?.row?.original?.ratedUser?.[0]?.name ?? "--",
-    }),
-
-    columnHelper.accessor("comment", {
-      header: "Comment",
-      cell: (info) => {
-        const comment = info?.row?.original?.comment ?? "--";
-
-        const truncated =
-          comment?.length > 30 ? comment.substring(0, 30) + "..." : comment;
-
-        return (
-          <div className="relative group cursor-pointer max-w-[200px]">
-            <span>{truncated}</span>
-
-            {comment?.length > 30 && (
-              <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-pre-wrap z-50 w-max max-w-xs">
-                {comment}
-              </div>
-            )}
-          </div>
-        );
-      },
-    }),
-
+  
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
       cell: (info) => DateTimeFormates?.(info?.getValue?.()),
@@ -141,7 +125,7 @@ const DisputeList = () => {
               size={22}
               className="cursor-pointer text-blue-500"
               onClick={() => {
-                navigate?.(`/view-feedback`, {
+                navigate?.(`/view-dispute`, {
                   state: { state: row?.original },
                 });
               }}

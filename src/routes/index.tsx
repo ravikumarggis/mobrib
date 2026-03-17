@@ -28,6 +28,7 @@ import NotificationView from "../pages/Notification/NotificationView";
 import FeedBackList from "../pages/FeedbackManagement/FeedbackList";
 import FeedbackView from "../pages/FeedbackManagement/FeedbackView";
 import DisputeList from "../pages/DisputedManagement/DisputeList";
+import DisputeView from "../pages/DisputedManagement/DisputeView";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -73,6 +74,7 @@ const routes: RouteObject[] = [
       { path: "/view-notification", element: <NotificationView /> },
       { path: "/feedback", element: <FeedBackList /> },
       { path: "/view-feedback", element: <FeedbackView /> },
+      { path: "/view-dispute", element: <DisputeView /> },
       { path: "/dispute", element: <DisputeList /> },
     ],
   },

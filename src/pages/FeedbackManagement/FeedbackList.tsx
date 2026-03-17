@@ -82,35 +82,38 @@ const FeedBackList = () => {
       header: "Sr. No",
       id: "serial",
       cell: ({ row, table }: { row: any; table: any }) => {
-        return Pagination({ filter, table, row });
+        return Pagination?.({ filter, table, row });
       },
     },
+  
     columnHelper.accessor("rating", {
       header: "Rate",
-      cell: (info) => info.row.original.rating || "--",
+      cell: (info) => info?.row?.original?.rating ?? "--",
     }),
+  
     columnHelper.accessor("rater", {
       header: "Rater",
-      cell: (info) => info.row.original.rater[0]?.name || "--",
+      cell: (info) => info?.row?.original?.rater?.[0]?.name ?? "--",
     }),
+  
     columnHelper.accessor("ratedUser", {
       header: "Rated User",
-      cell: (info) => info.row.original.ratedUser[0]?.name || "--",
+      cell: (info) => info?.row?.original?.ratedUser?.[0]?.name ?? "--",
     }),
-
+  
     columnHelper.accessor("comment", {
       header: "Comment",
       cell: (info) => {
-        const comment = info.row.original.comment || "--";
-
+        const comment = info?.row?.original?.comment ?? "--";
+  
         const truncated =
-          comment.length > 30 ? comment.substring(0, 30) + "..." : comment;
-
+          comment?.length > 30 ? comment.substring(0, 30) + "..." : comment;
+  
         return (
           <div className="relative group cursor-pointer max-w-[200px]">
             <span>{truncated}</span>
-
-            {comment.length > 30 && (
+  
+            {comment?.length > 30 && (
               <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-pre-wrap z-50 w-max max-w-xs">
                 {comment}
               </div>
@@ -119,34 +122,34 @@ const FeedBackList = () => {
         );
       },
     }),
-
+  
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
-      cell: (info) => DateTimeFormates(info.getValue()),
+      cell: (info) => DateTimeFormates?.(info?.getValue?.()),
     }),
-
+  
     {
       header: "Action",
       id: "action",
-      cell: ({ row }) => {
-        const id = row.original._id;
-
+      cell: ({ row }: any) => {
+        const id = row?.original?._id;
+  
         return (
           <div className="flex items-center gap-3">
             <IoMdEye
               size={22}
               className="cursor-pointer text-blue-500"
               onClick={() => {
-                navigate(`/view-feedback`, {
+                navigate?.(`/view-feedback`, {
                   state: { state: row?.original },
                 });
               }}
             />
-
+  
             <MdOutlineDeleteOutline
               size={22}
               className="cursor-pointer text-red-500"
-              onClick={() => handleDelete(id)}
+              onClick={() => handleDelete?.(id)}
             />
           </div>
         );

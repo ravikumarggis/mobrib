@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { api } from "../services/apiServices";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -43,5 +44,37 @@ export const useDisputeList = (filter: FilterType) => {
         return null;
       }
     },
+  });
+};
+
+
+const handleResponse = (response: any) => {
+  if (response?.data?.responseCode === 200) {
+    return response?.data?.result; // adjust if your API structure differs
+  } else {
+    throw new Error(response?.data?.responseMessage || "Something went wrong");
+  }
+};
+
+
+const handleGetFeeStructure = async (id : string) => {
+  try {
+    const response = await api({
+      url: "/admin/viewDispute", // change if different
+      method: "GET",
+      params: {_id: id}   
+    });
+
+    return handleResponse(response);
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage || "Failed to fetch fee structure");
+    throw error;
+  }
+};
+
+export const useGetDispiteDetail = (id : string) => {
+  return useQuery({
+    queryKey: ["viewDispute"],
+    queryFn: ()=>{handleGetFeeStructure(id as string)},
   });
 };
