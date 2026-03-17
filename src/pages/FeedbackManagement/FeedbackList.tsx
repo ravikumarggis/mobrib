@@ -14,7 +14,8 @@ import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
 
 import { IoMdEye } from "react-icons/io";
-import { useTaskList } from "../../queries/tickets";
+import { useFeedbackList } from "../../queries/feedback";
+
 
 interface InrWithdrawListRowData {
   id: string;
@@ -39,7 +40,7 @@ const FeedBackList = () => {
   const [filter, setFilter] = useState({ page: searchParams.get("page") });
   const debouncedFilter = useDebounce(filter, 1000);
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
-  const { data, isLoading } = useTaskList(debouncedFilter);
+  const { data, isLoading } = useFeedbackList(debouncedFilter);
 
   const {
     data: WithdrawCryptoInrCSV,
@@ -92,7 +93,7 @@ const FeedBackList = () => {
       cell: (info) => info.getValue() || "--",
     }),
     columnHelper.accessor("taskProgress", {
-      header: "Task Status",
+      header: "Feedback Status",
       cell: (info) => info.getValue() || "--",
     }),
     columnHelper.accessor("location", {
