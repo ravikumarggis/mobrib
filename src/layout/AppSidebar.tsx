@@ -163,6 +163,13 @@ const navItems: NavItem[] = [
     isRead: true,
     isWrite: true,
   },
+  {
+    icon: <BiDesktop />,
+    name: "Dispute Management",
+    path: "/dispute",
+    isRead: true,
+    isWrite: true,
+  },
 
   {
     icon: <MdOutlineContentPaste />,
