@@ -14,19 +14,17 @@ import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
 
 import { IoMdEye } from "react-icons/io";
-import { useFeedbackList } from "../../queries/feedback";
-
+import { useDeleteFeedback, useFeedbackList } from "../../queries/feedback";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 
 interface InrWithdrawListRowData {
   id: string;
 
-  userId: any;
-  platformFee: string;
-  taskLocation: string;
-  location: any;
+  rating: any;
+  rater: string;
+  ratedUser: string;
+  comment: any;
 
-  paymentStatus: string;
-  taskProgress: string;
   createdAt: string;
 
   Action: any;
@@ -61,6 +59,18 @@ const FeedBackList = () => {
     return { tabledata, pages, WithCryptoInrCSVData };
   }, [data, WithdrawCryptoInrCSV]);
 
+  const {
+    mutate: deleteFeedback,
+    isPending: deleteFeedbackLoading,
+    isSuccess: deleteFeedbackSuccess,
+  } = useDeleteFeedback();
+
+  const handleDelete = (_id: string) => {
+    if (!_id) return;
+
+    deleteFeedback({ _id });
+  };
+
   useEffect(() => {
     if (isSuccess && WithdrawCryptoInrCSV?.result?.docs?.length > 0) {
       setIsDownloadCsv(false);
@@ -75,44 +85,37 @@ const FeedBackList = () => {
         return Pagination({ filter, table, row });
       },
     },
-    columnHelper.accessor("userId", {
-      header: "Name",
-      cell: (info) => info.row.original.userId?.name || "--",
+    columnHelper.accessor("rating", {
+      header: "Rate",
+      cell: (info) => info.row.original.rating || "--",
     }),
-    columnHelper.accessor("userId", {
-      header: "Email",
-      cell: (info) => info.row.original.userId?.email || "--",
+    columnHelper.accessor("rater", {
+      header: "Rater",
+      cell: (info) => info.row.original.rater[0]?.name || "--",
     }),
-    columnHelper.accessor("platformFee", {
-      header: "Platform Fee",
-      cell: (info) => info.getValue() || "0",
+    columnHelper.accessor("ratedUser", {
+      header: "Rated User",
+      cell: (info) => info.row.original.ratedUser[0]?.name || "--",
     }),
 
-    columnHelper.accessor("paymentStatus", {
-      header: "Payment Status",
-      cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("taskProgress", {
-      header: "Feedback Status",
-      cell: (info) => info.getValue() || "--",
-    }),
-    columnHelper.accessor("location", {
-      header: "Location",
+    columnHelper.accessor("comment", {
+      header: "Comment",
       cell: (info) => {
-        const location = info.getValue();
+        const comment = info.row.original.comment || "--";
 
-        if (!location?.coordinates?.length) return "--";
-
-        const [lng, lat] = location.coordinates;
+        const truncated =
+          comment.length > 30 ? comment.substring(0, 30) + "..." : comment;
 
         return (
-          <a
-            href={`https://www.google.com/maps?q=${lat},${lng}`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            📍 Map
-          </a>
+          <div className="relative group cursor-pointer max-w-[200px]">
+            <span>{truncated}</span>
+
+            {comment.length > 30 && (
+              <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-pre-wrap z-50 w-max max-w-xs">
+                {comment}
+              </div>
+            )}
+          </div>
         );
       },
     }),
@@ -124,27 +127,28 @@ const FeedBackList = () => {
 
     {
       header: "Action",
-      id: "view",
-      cell: ({ row }: { row: any }) => {
+      id: "action",
+      cell: ({ row }) => {
+        const id = row.original._id;
+
         return (
-          // <Button
-          //   onClick={() => {
-          //     navigate(`/view-user`, {
-          //       state: { userDetail: row?.original                },
-          //     });
-          //   }}
-          // >
-          //   View
-          // </Button>
-          <IoMdEye
-            size={25}
-            className="cursor-pointer"
-            onClick={() => {
-              navigate(`/view-task`, {
-                state: { id: row?.original },
-              });
-            }}
-          />
+          <div className="flex items-center gap-3">
+            <IoMdEye
+              size={22}
+              className="cursor-pointer text-blue-500"
+              onClick={() => {
+                navigate(`/view-feedback`, {
+                  state: { state: row?.original },
+                });
+              }}
+            />
+
+            <MdOutlineDeleteOutline
+              size={22}
+              className="cursor-pointer text-red-500"
+              onClick={() => handleDelete(id)}
+            />
+          </div>
         );
       },
     },

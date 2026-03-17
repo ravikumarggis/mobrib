@@ -194,7 +194,7 @@ const TableFilter: React.FC<TableFilterProps> = ({
           </Fragment>
         </div>
       )}
-      {type == "userList" && (
+      {(type == "userList" || type == "feedbackList") && (
         <div className="w-full xl:w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid 2xl:grid-cols-5 gap-x-3.5 gap-y-3.5 space-x-3 space-y-3 sm:space-y-0">
           <Fragment>
             <div className="w-full">
@@ -219,40 +219,6 @@ const TableFilter: React.FC<TableFilterProps> = ({
                 />
               </div>
             </div>
-
-            {/* <div className="w-full">
-              <Listbox
-                onChange={(value) => {
-                  setFilter((p: any) => ({
-                    ...p,
-                    page: 1,
-                    filter: value?.name,
-                  }));
-                  removeParamFn();
-                }}
-                value={filter?.filter}
-              >
-                <Label>User Type</Label>
-                <ListboxButton className="rounded-lg border border-gray-200 dark:border-gray-800 text-sm flex items-center justify-between w-full px-2 py-2.5 text-gray-400 dark:text-white/30">
-                  <p>{filter?.filter || "User Type"}</p>
-                  <ChevronDown />
-                </ListboxButton>
-                <ListboxOptions
-                  anchor="bottom start"
-                  className="bg-blue-400 rounded-lg"
-                >
-                  {userType.map((type) => (
-                    <ListboxOption
-                      key={type.id}
-                      value={type}
-                      className=" data-[focus]:bg-blue-100 cursor-pointer flex items-center justify-between w-full px-2 py-2.5 dark:bg-black bg-white text-gray-400 dark:text-white/30 min-w-32"
-                    >
-                      {type.name}
-                    </ListboxOption>
-                  ))}
-                </ListboxOptions>
-              </Listbox>
-            </div> */}
 
             <div className=" w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-3">
               <div className="w-full sm:min-w-40 flex items-end mt-4">

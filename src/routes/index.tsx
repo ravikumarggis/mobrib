@@ -26,6 +26,7 @@ import SendNotification from "../pages/Notification/SendNotification";
 import NotificationList from "../pages/Notification/NotificationList";
 import NotificationView from "../pages/Notification/NotificationView";
 import FeedBackList from "../pages/FeedbackManagement/FeedbackList";
+import FeedbackView from "../pages/FeedbackManagement/FeedbackView";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -70,7 +71,7 @@ const routes: RouteObject[] = [
       { path: "/notification", element: <NotificationList /> },
       { path: "/view-notification", element: <NotificationView /> },
       { path: "/feedback", element: <FeedBackList /> },
-      { path: "/view-feedback", element: <NotificationView /> },
+      { path: "/view-feedback", element: <FeedbackView /> },
     ],
   },
   { path: "/", element: <SignIn /> },

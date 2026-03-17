@@ -14,20 +14,19 @@ type FilterType = {
   isTestUser?: string;
 };
 
+interface deleteCategoryPlayload {
+  _id: string;
+}
 
-export const fetchUserList = async ( filter: FilterType) => {
+export const fetchUserList = async (filter: FilterType) => {
   try {
     const response = await api({
-      url: `/admin/taskList`,
+      url: `/admin/feedbackList`,
       method: "GET",
       params: {
-      
-     
         search: filter?.search || undefined,
-        userType:
-           filter?.filter,
-        
-    
+        userType: filter?.filter,
+
         limit: 10,
         page: filter?.page || 1,
       },
@@ -39,12 +38,10 @@ export const fetchUserList = async ( filter: FilterType) => {
   }
 };
 
-
-
-export const useFeedbackList = ( filter: FilterType) => {
+export const useFeedbackList = (filter: FilterType) => {
   return useQuery({
     queryKey: ["userList", filter],
-    queryFn: () => fetchUserList( filter),
+    queryFn: () => fetchUserList(filter),
     select(data) {
       if (data?.data?.responseCode === 200) {
         return data?.data?.result;
@@ -52,6 +49,29 @@ export const useFeedbackList = ( filter: FilterType) => {
         return null;
       }
     },
-   
+  });
+};
+
+const handleDeleteCategory = async (data: deleteCategoryPlayload) => {
+  try {
+    const response = await api({
+      url: "/admin/deleteFeedback",
+      method: "DELETE",
+      data: data,
+    });
+    if (response?.data?.responseCode === 200) {
+      toast.success(response?.data?.responseMessage);
+
+      return response?.data;
+    }
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage);
+    return error?.response?.data;
+  }
+};
+
+export const useDeleteFeedback = () => {
+  return useMutation({
+    mutationFn: (data: deleteCategoryPlayload) => handleDeleteCategory(data),
   });
 };
