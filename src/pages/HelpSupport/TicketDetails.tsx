@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import BackComponent from "../../components/backcomponent/BackComponent";
-import {
-  useTicketsDetails,
-  
-  useTicketStatus,
-} from "../../queries/tickets";
+import { useTicketsDetails, useTicketStatus } from "../../queries/tickets";
 import ChatUI from "./ChatUI";
 import { useParams } from "react-router";
 // import CopyButton from "../../components/common/CopyButton";
@@ -17,35 +13,36 @@ import CopyButton from "../../components/common/CopyButton";
 
 interface CloseTicketData {
   status: string;
-  ticketId: number | null;
+  ticketId: string | null;
 }
 
 const TicketDetails: React.FC = () => {
   const [showConfirmationModal, setshowConfirmationModal] = useState(false);
   const { id } = useParams<{ id: string | undefined }>();
   const [isActiveInactive, setIsActiveInactive] = useState(false);
-  const [clostTicketData, setclostTicketData] = useState<CloseTicketData>({ status: "", ticketId: null, });
+  const [clostTicketData, setclostTicketData] = useState<CloseTicketData>({
+    status: "",
+    ticketId: null,
+  });
   const [selectOtherQueryTicketID, setselectOtherQueryTicketID] = useState("");
   const [consverSession, setconsverSession] = useState([]);
   const [ticketStatus, setticketStatus] = useState("");
   const [OtherQueryData, setOtherQueryData] = useState([]);
   const [isOpenChatUIModal, setisOpenChatUIModal] = useState(false);
 
- 
   const { data: TicketDetails, isLoading } = useTicketsDetails(id);
   const { mutate } = useTicketStatus();
   // const { data: ticketList } = useTicketsList();
 
-  console.log(id,"messagesmessages");
-
-
+  console.log(id, "messagesmessages");
 
   useEffect(() => {
     // const OtherQueryList = ticketList?.data?.result?.docs?.filter((item: any) =>
     //   item?.user?.user_id === TicketDetails?.data?.result?.user?.user_id &&
     //   !TicketDetails?.data?.result?.isGuestUser &&
     //   item?.ticketId !== TicketDetails?.data?.result?.ticketId
-    const OtherQueryList = TicketDetails?.data?.result?.otherTicketDetails ?? []
+    const OtherQueryList =
+      TicketDetails?.data?.result?.otherTicketDetails ?? [];
     setOtherQueryData(OtherQueryList);
   }, [TicketDetails]);
 
@@ -59,7 +56,7 @@ const TicketDetails: React.FC = () => {
   // const handleactive = (TicketStatus: string, ticketId: number | null) => {
 
   //   console.log(Number(ticketId),id,"yuguyyubbyu");
-    
+
   //   if (!showConfirmationModal) {
   //     setshowConfirmationModal(true);
   //     setclostTicketData({
@@ -72,20 +69,19 @@ const TicketDetails: React.FC = () => {
   //   }
   // };
 
-  const handleactive = ( ticketId: number | null,ticketStatus: string) => {
+  const handleactive = (ticketId: string | null, ticketStatus: string) => {
     if (!ticketId) return;
-  
+
     setclostTicketData({
       status:
         ticketStatus === "pending" || ticketStatus === "in-process"
           ? "resolved"
           : "pending",
-      ticketId: Number(ticketId),
+      ticketId: ticketId,
     });
-  
+
     setshowConfirmationModal(true);
   };
-  
 
   return (
     <div>
@@ -106,15 +102,12 @@ const TicketDetails: React.FC = () => {
                     {!TicketDetails?.data?.result?.isGuestUser && (
                       <p>User Id</p>
                     )}
-
-                    <p>Name</p>
-                    <p>KYC Status</p>
                   </div>
                   <div className="text-end dark:text-white">
                     {!TicketDetails?.data?.result?.isGuestUser && (
                       <p className="-mr-2">
-                        {TicketDetails?.data?.result?.user?.user_id
-                          ? TicketDetails?.data?.result?.user?.user_id
+                        {TicketDetails?.data?.result?.userId
+                          ? TicketDetails?.data?.result?.userId
                           : "--"}
                         <span>
                           <CopyButton
@@ -125,17 +118,6 @@ const TicketDetails: React.FC = () => {
                         </span>
                       </p>
                     )}
-
-                    <p>
-                      {TicketDetails?.data?.result?.name
-                        ? TicketDetails?.data?.result?.name
-                        : "--"}
-                    </p>
-                    <p>
-                      {TicketDetails?.data?.result?.user?.isKYCVerify
-                        ? "Verified"
-                        : "Not-Verified"}
-                    </p>
                   </div>
                 </div>
 
@@ -156,18 +138,19 @@ const TicketDetails: React.FC = () => {
                     </p>
                     <p className="dark:text-white">
                       {" "}
-                      {TicketDetails?.data?.result?.categoryType
-                        ? TicketDetails?.data?.result?.categoryType
+                      {TicketDetails?.data?.result?.reason
+                        ? TicketDetails?.data?.result?.reason
                         : "--"}
                     </p>
                     <p
-                      className={`${TicketDetails?.data?.result?.ticketStatus === "pending"
-                        ? "text-orange-500"
-                        : TicketDetails?.data?.result?.ticketStatus ===
-                          "resolved"
+                      className={`${
+                        TicketDetails?.data?.result?.ticketStatus === "pending"
+                          ? "text-orange-500"
+                          : TicketDetails?.data?.result?.ticketStatus ===
+                            "resolved"
                           ? "text-green-500"
                           : "text-yellow-700"
-                        } capitalize`}
+                      } capitalize`}
                     >
                       {TicketDetails?.data?.result?.ticketStatus
                         ? TicketDetails?.data?.result?.ticketStatus
@@ -181,7 +164,7 @@ const TicketDetails: React.FC = () => {
                         onChange={() =>
                           handleactive(
                             TicketDetails?.data?.result?._id,
-                            TicketDetails?.data?.result?.ticketStatus,
+                            TicketDetails?.data?.result?.ticketStatus
                             // TicketDetails?.data?.result?.ticketId
                           )
                         }
@@ -244,8 +227,6 @@ const TicketDetails: React.FC = () => {
               Communication
             </h2>
             <div>
-
-            
               <ChatUI
                 // ticketId={TicketDetails?.data?.result?.id}
                 ticketId={TicketDetails?.data?.result?._id}
