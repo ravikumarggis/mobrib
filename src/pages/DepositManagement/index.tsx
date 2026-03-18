@@ -1,43 +1,57 @@
+import moment from "moment";
 import {
   createColumnHelper,
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import Button from "../../components/ui/button/Button";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useMemo, useState } from "react";
 import CommonTable from "../../components/common/CommonTable";
 import { useNavigate } from "react-router";
+import {
+  useWithdrawCrypto,
+  useWithdrawList,
+} from "../../queries/deposit-management";
 import BackComponent from "../../components/backcomponent/BackComponent";
-import { DateTimeFormates, Pagination, statusText } from "../../utils";
+import {
+  DateTimeFormates,
+  OldNewUserTag,
+  Pagination,
+  statusColor,
+  statusText,
+  TestRealUserType,
+} from "../../utils";
 import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
-
-import { IoMdEye } from "react-icons/io";
-import { useDisputeList } from "../../queries/dispute";
+import CopyButton from "../../components/common/CopyButton";
 
 interface InrWithdrawListRowData {
   id: string;
-
-  rating: any;
-  poster: string;
-  ratedUser: string;
-  requestedResolution: any;
-
-  disputeStatus: string;
+  user: {
+    name: number;
+    email: string;
+    user_id: string;
+    isNewUser: boolean;
+    isTestUser: boolean;
+  };
+  amount: string;
+  withdrawStatus: string;
   createdAt: string;
-
+  updatedAt: string;
+  INRAmount: string;
   Action: any;
 }
 
 const columnHelper = createColumnHelper<InrWithdrawListRowData>();
 
-const DisputeList = () => {
+const DepositList = () => {
   const navigate = useNavigate();
   const { setParam, searchParams, removeParam } = useSetSearchParam();
   const [filter, setFilter] = useState({ page: searchParams.get("page") });
   const debouncedFilter = useDebounce(filter, 1000);
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
-  const { data, isLoading } = useDisputeList(debouncedFilter);
+  const { data, isLoading } = useWithdrawList(debouncedFilter);
 
   const {
     data: WithdrawCryptoInrCSV,
@@ -69,57 +83,65 @@ const DisputeList = () => {
       header: "Sr. No",
       id: "serial",
       cell: ({ row, table }: { row: any; table: any }) => {
-        return Pagination?.({ filter, table, row });
+        return Pagination({ filter, table, row });
       },
     },
+    columnHelper.accessor("user.name", {
+      header: "Name",
+      cell: (info) => info.getValue() || "--",
+    }),
+    // columnHelper.accessor("user.email", {
+    //   header: "Email",
+    //   cell: (info) => info.getValue() || "--",
+    // }),
+    columnHelper.accessor("user.email", {
+      header: "Email",
+      cell: (info) => {
+        const val = info.getValue() || "--";
+        return val ? (
+          <span>
+            {" "}
+            {val} <CopyButton textToCopy={val} />{" "}
+          </span>
+        ) : (
+          "--"
+        );
+      },
+    }),
 
-    columnHelper.accessor("poster", {
-      header: "Poster Name",
-      cell: (info) => info?.row?.original?.poster?.name ?? "--",
+    columnHelper.accessor("amount", {
+      header: "Amount",
+      cell: (info) => info.getValue() || "--",
     }),
-    columnHelper.accessor("tasker", {
-      header: "Tasker Name",
-      cell: (info) => info?.row?.original?.tasker?.name ?? "--",
-    }),
-
-    columnHelper.accessor("disputeStatus", {
-      header: "Dispute Status",
-      cell: (info) => info?.row?.original?.disputeStatus ?? "--",
-    }),
-    columnHelper.accessor("requestedResolution", {
-      header: "Requested Resolution",
-      cell: (info) => info?.row?.original?.requestedResolution ?? "--",
+    columnHelper.accessor("withdrawStatus", {
+      header: "Status",
+      cell: (info) => {
+        let value = info.getValue() || "--";
+        return (
+          <span className={`${statusColor(value)}`}>{statusText(value)}</span>
+        );
+      },
     }),
 
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
-      cell: (info) => DateTimeFormates?.(info?.getValue?.()),
+      cell: (info) => DateTimeFormates(info.getValue()),
     }),
 
     {
       header: "Action",
-      id: "action",
-      cell: ({ row }) => {
-        const id = row?.original?._id;
-
+      id: "view",
+      cell: ({ row }: { row: any }) => {
         return (
-          <div className="flex items-center gap-3">
-            <IoMdEye
-              size={22}
-              className="cursor-pointer text-blue-500"
-              onClick={() => {
-                navigate?.(`/view-dispute`, {
-                  state: { state: row?.original },
-                });
-              }}
-            />
-
-            {/* <MdOutlineDeleteOutline
-              size={22}
-              className="cursor-pointer text-red-500"
-              onClick={() => handleDelete?.(id)}
-            /> */}
-          </div>
+          <Button
+            onClick={() => {
+              navigate(`/withdraw-view`, {
+                state: { withdrawDetail: row?.original },
+              });
+            }}
+          >
+            View
+          </Button>
         );
       },
     },
@@ -136,7 +158,7 @@ const DisputeList = () => {
     setFilter,
     isLoading,
     table,
-    type: "feedbackList",
+    type: "withdrawCrypto",
     totalPage: formateData?.pages,
     filterData: {
       WithCryptoInrCSVData: formateData?.WithCryptoInrCSVData,
@@ -151,10 +173,10 @@ const DisputeList = () => {
 
   return (
     <>
-      <BackComponent text="Dispute List" />
+      <BackComponent text="Withdraw List" />
       <CommonTable tableData={tableData} />
     </>
   );
 };
 
-export default DisputeList;
+export default DepositList;

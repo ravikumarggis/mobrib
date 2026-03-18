@@ -116,6 +116,13 @@ const navItems: NavItem[] = [
   },
   {
     icon: <PiHandWithdrawBold />,
+    name: "Deposite Management",
+    path: "/deposit-list",
+    isRead: true,
+    isWrite: true,
+  },
+  {
+    icon: <PiHandWithdrawBold />,
     name: "Withdrawal Management",
     path: "/withdraw-inr",
     isRead: true,

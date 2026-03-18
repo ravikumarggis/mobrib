@@ -1,5 +1,3 @@
-
-
 import React, { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import Button from "../../components/ui/button/Button";
@@ -27,21 +25,15 @@ import CommonTable from "../../components/common/CommonTable";
 import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import ConfirmModal from "../../components/modal/confirmModal";
 
-
-const TASK_STATUS_OPTIONS = [
-  "Posted",
-  "Assigned",
-  "InProgress",
-  "Completed",
-  "Rejected",
-];
+const TASK_STATUS_OPTIONS = ["Rejected"];
 
 interface InrWithdrawListRowData {
   id: string;
-  bidStatus : string;
+  bidStatus: string;
   amount: any;
   platformFee: string;
   taskLocation: string;
+  message: string;
   location: any;
 
   paymentStatus: string;
@@ -58,8 +50,8 @@ const ViewTask: React.FC = () => {
   const { setParam, removeParam } = useSetSearchParam();
   const location = useLocation();
   const { id } = location.state || {};
-    const [showConfirmationModal, setshowConfirmationModal] = useState(false);
-    const [selectCategoryID, setselectCategoryID] = useState("");
+  const [showConfirmationModal, setshowConfirmationModal] = useState(false);
+  const [selectCategoryID, setselectCategoryID] = useState("");
 
   const { data: taskDetail, isLoading } = useTaskDetail(id?._id);
 
@@ -87,14 +79,13 @@ const ViewTask: React.FC = () => {
 
   /* Update task status */
   const handleUpdateTaskStatus = () => {
-    if (!selectCategoryID ) return;
+    if (!selectCategoryID) return;
 
     ApproveRejectBid({
       _id: selectCategoryID,
       bidStatus: "REJECTED",
     });
   };
-
 
   const handleTaskStatus = () => {
     if (!taskDetail?._id || !taskStatus) return;
@@ -105,13 +96,12 @@ const ViewTask: React.FC = () => {
     });
   };
 
-
   /* Redirect after success */
   useEffect(() => {
     if (cryptoSuccess || TaskSuccess) {
       navigate("/task-list");
     }
-  }, [cryptoSuccess, TaskSuccess,navigate]);
+  }, [cryptoSuccess, TaskSuccess, navigate]);
   const formateData = useMemo(() => {
     const tabledata = taskDetail?.bids ?? [];
     const pages = 1;
@@ -125,56 +115,74 @@ const ViewTask: React.FC = () => {
       id: "serial",
       cell: ({ row, table }) => Pagination({ table, row }),
     },
-    columnHelper.accessor(row => row?.hirerId?.name, {
+    columnHelper.accessor((row) => row?.hirerId?.name, {
       id: "name",
       header: "Name",
-      cell: info => info.getValue() || "--",
+      cell: (info) => info.getValue() || "--",
     }),
-    
-    columnHelper.accessor(row => row?.hirerId?.email, {
+
+    columnHelper.accessor((row) => row?.hirerId?.email, {
       id: "email",
       header: "Email",
-      cell: info => info.getValue() || "--",
+      cell: (info) => info.getValue() || "--",
     }),
- 
-    columnHelper.accessor(row => row?.amount, {
+
+    columnHelper.accessor((row) => row?.amount, {
       id: "amount",
       header: "Amount",
-      cell: info => info.getValue() || "--",
+      cell: (info) => info.getValue() || "--",
     }),
-  
-    columnHelper.accessor(row => row.bidStatus, {
+
+    columnHelper.accessor("message", {
+      header: "Message",
+      cell: (info) => {
+        const message = info?.row?.original?.message ?? "--";
+
+        const truncated =
+          message?.length > 30 ? message.substring(0, 30) + "..." : message;
+
+        return (
+          <div className="relative group cursor-pointer max-w-[200px]">
+            <span>{truncated}</span>
+
+            {message?.length > 30 && (
+              <div className="absolute left-0 bottom-full mb-2 hidden group-hover:block bg-black text-white text-xs rounded px-2 py-1 whitespace-pre-wrap z-50 w-max max-w-xs">
+                {message}
+              </div>
+            )}
+          </div>
+        );
+      },
+    }),
+
+    columnHelper.accessor((row) => row.bidStatus, {
       id: "status",
       header: "Status",
-      cell: info => info.getValue() || "--",
+      cell: (info) => info.getValue() || "--",
     }),
-  
-  
-  
+
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
-      cell: info => DateTimeFormates(info.getValue()),
+      cell: (info) => DateTimeFormates(info.getValue()),
     }),
-  
+
     {
       header: "Action",
       id: "view",
       cell: ({ row }) => (
-       
         <Button
-        className=" py-3 bg-red-700 hover:bg-red-600"
-        disabled={row.original.bidStatus == "REJECTED"}
-        onClick={() => {
-          setselectCategoryID(row.original._id);
-                setshowConfirmationModal(true);
-        }}
-      >
-        Reject
-      </Button>
+          className=" py-3 bg-red-700 hover:bg-red-600"
+          disabled={row.original.bidStatus == "REJECTED"}
+          onClick={() => {
+            setselectCategoryID(row.original._id);
+            setshowConfirmationModal(true);
+          }}
+        >
+          Reject
+        </Button>
       ),
     },
   ];
-  
 
   const table = useReactTable({
     data: formateData?.tabledata,
@@ -240,6 +248,15 @@ const ViewTask: React.FC = () => {
               label="Payment Status"
               value={taskDetail?.paymentStatus || "--"}
             />
+            <DetailRow
+              label="
+              Amount Offering"
+              value={taskDetail?.amountOffering || "--"}
+            />
+            <DetailRow
+              label="Allocate Amount"
+              value={taskDetail?.allocateAmount || "--"}
+            />
 
             {/* Task Location */}
             <DetailRow
@@ -293,21 +310,19 @@ const ViewTask: React.FC = () => {
 
       {cryptoLoading && <LoadingScreen />}
 
-      {
-        showConfirmationModal && (
-          <ConfirmModal
-            message="Are you sure you want to Reject this Bid?"
-            isOpen={showConfirmationModal}
-            btnTextClose="Close"
-            btnTextConfirm="Confirm"
-            onClose={() => setshowConfirmationModal(false)}
-            onConfirm={() => {
-              handleUpdateTaskStatus()
-              setshowConfirmationModal(false);
-            }}
-          />
-        )
-      }
+      {showConfirmationModal && (
+        <ConfirmModal
+          message="Are you sure you want to Reject this Bid?"
+          isOpen={showConfirmationModal}
+          btnTextClose="Close"
+          btnTextConfirm="Confirm"
+          onClose={() => setshowConfirmationModal(false)}
+          onConfirm={() => {
+            handleUpdateTaskStatus();
+            setshowConfirmationModal(false);
+          }}
+        />
+      )}
     </>
   );
 };

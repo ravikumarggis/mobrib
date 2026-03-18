@@ -47,34 +47,37 @@ export const useDisputeList = (filter: FilterType) => {
   });
 };
 
-
 const handleResponse = (response: any) => {
   if (response?.data?.responseCode === 200) {
+    console.log("jjjjjjjjj", response?.data?.result);
+
     return response?.data?.result; // adjust if your API structure differs
   } else {
     throw new Error(response?.data?.responseMessage || "Something went wrong");
   }
 };
 
-
-const handleGetFeeStructure = async (id : string) => {
+const handleGetFeeStructure = async (id: string) => {
   try {
     const response = await api({
       url: "/admin/viewDispute", // change if different
       method: "GET",
-      params: {_id: id}   
+      params: { _id: id },
     });
 
     return handleResponse(response);
   } catch (error: any) {
-    toast.error(error?.response?.data?.responseMessage || "Failed to fetch fee structure");
+    toast.error(
+      error?.response?.data?.responseMessage || "Failed to fetch fee structure"
+    );
     throw error;
   }
 };
 
-export const useGetDispiteDetail = (id : string) => {
+export const useGetDispiteDetail = (id: string) => {
   return useQuery({
-    queryKey: ["viewDispute"],
-    queryFn: ()=>{handleGetFeeStructure(id as string)},
+    queryKey: ["viewDispute", id],
+    queryFn: () => handleGetFeeStructure(id), // ✅ return
+    enabled: !!id,
   });
 };

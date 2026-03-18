@@ -9,12 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import CommonTable from "../../components/common/CommonTable";
 import { useNavigate } from "react-router";
 import BackComponent from "../../components/backcomponent/BackComponent";
-import {
-  DateTimeFormates,
-  Pagination,
-  statusText,
-
-} from "../../utils";
+import { DateTimeFormates, Pagination, statusText } from "../../utils";
 import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";
 
@@ -23,16 +18,18 @@ import { useTaskList } from "../../queries/tickets";
 
 interface InrWithdrawListRowData {
   id: string;
-  
+
   userId: any;
   platformFee: string;
   taskLocation: string;
   location: any;
-   
+  allocateAmount: any;
+  amountOffering: any;
+
   paymentStatus: string;
   taskProgress: string;
   createdAt: string;
-  
+
   Action: any;
 }
 
@@ -45,9 +42,6 @@ const Task = () => {
   const debouncedFilter = useDebounce(filter, 1000);
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
   const { data, isLoading } = useTaskList(debouncedFilter);
-
-
-  
 
   const {
     data: WithdrawCryptoInrCSV,
@@ -94,9 +88,15 @@ const Task = () => {
       header: "Platform Fee",
       cell: (info) => info.getValue() || "0",
     }),
+    columnHelper.accessor("amountOffering", {
+      header: "Amount Offering",
+      cell: (info) => info.getValue() || "0",
+    }),
+    columnHelper.accessor("allocateAmount", {
+      header: "Allocate Amount",
+      cell: (info) => info.getValue() || "0",
+    }),
 
-
- 
     columnHelper.accessor("paymentStatus", {
       header: "Payment Status",
       cell: (info) => info.getValue() || "--",
@@ -109,11 +109,11 @@ const Task = () => {
       header: "Location",
       cell: (info) => {
         const location = info.getValue();
-    
+
         if (!location?.coordinates?.length) return "--";
-    
+
         const [lng, lat] = location.coordinates;
-    
+
         return (
           <a
             href={`https://www.google.com/maps?q=${lat},${lng}`}
@@ -125,7 +125,7 @@ const Task = () => {
         );
       },
     }),
-    
+
     columnHelper.accessor("createdAt", {
       header: "Date & Time",
       cell: (info) => DateTimeFormates(info.getValue()),
@@ -145,15 +145,15 @@ const Task = () => {
           // >
           //   View
           // </Button>
-            <IoMdEye
-                      size={25}
-                      className="cursor-pointer"
-                      onClick={() => {
-                        navigate(`/view-task`, {
-                          state: { id: row?.original                },
-                        });
-                      }}
-                    />
+          <IoMdEye
+            size={25}
+            className="cursor-pointer"
+            onClick={() => {
+              navigate(`/view-task`, {
+                state: { id: row?.original },
+              });
+            }}
+          />
         );
       },
     },
