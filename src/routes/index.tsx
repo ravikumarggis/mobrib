@@ -30,6 +30,7 @@ import FeedbackView from "../pages/FeedbackManagement/FeedbackView";
 import DisputeList from "../pages/DisputedManagement/DisputeList";
 import DisputeView from "../pages/DisputedManagement/DisputeView";
 import DepositList from "../pages/DepositManagement";
+import DepositView from "../pages/DepositManagement/ViewDeposit";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -40,6 +41,7 @@ const routes: RouteObject[] = [
       { path: "/withdraw-inr", element: <WithdrawInr /> },
 
       { path: "/withdraw-view", element: <WithDrawCryptoView /> },
+     
       { path: "/kyc-view", element: <KycView /> },
       { path: "/user-list", element: <UserList /> },
       { path: "/view-user", element: <ViewUser /> },
@@ -78,6 +80,7 @@ const routes: RouteObject[] = [
       { path: "/dispute", element: <DisputeList /> },
       { path: "/view-dispute", element: <DisputeView /> },
       { path: "/deposit-list", element: <DepositList /> },
+      { path: "/deposit-view", element: <DepositView /> },
     ],
   },
   { path: "/", element: <SignIn /> },

@@ -247,6 +247,9 @@ export const statusText = (type: string) => {
     case "released":
       return "Released";
 
+    case "PAYMENT_REFUNDED":
+      return "Payment Refund";
+
     default:
       return type;
   }
@@ -334,12 +337,16 @@ export const statusColor = (type: string) => {
 
     case "Pending":
       return "text-yellow-500";
+  
 
     case "INACTIVE":
       return "text-red-500";
 
     case "buy":
       return "text-green-500";
+
+      case "PAYMENT_REFUNDED":
+        return "text-green-500";
 
     case "Buy":
       return "text-green-500";

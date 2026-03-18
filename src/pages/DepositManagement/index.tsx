@@ -11,7 +11,7 @@ import CommonTable from "../../components/common/CommonTable";
 import { useNavigate } from "react-router";
 import {
   useWithdrawCrypto,
-  useWithdrawList,
+  useDepositList,
 } from "../../queries/deposit-management";
 import BackComponent from "../../components/backcomponent/BackComponent";
 import {
@@ -36,7 +36,7 @@ interface InrWithdrawListRowData {
     isTestUser: boolean;
   };
   amount: string;
-  withdrawStatus: string;
+  depositStatus: string;
   createdAt: string;
   updatedAt: string;
   INRAmount: string;
@@ -51,7 +51,7 @@ const DepositList = () => {
   const [filter, setFilter] = useState({ page: searchParams.get("page") });
   const debouncedFilter = useDebounce(filter, 1000);
   const [isDownloadCsv, setIsDownloadCsv] = useState(false);
-  const { data, isLoading } = useWithdrawList(debouncedFilter);
+  const { data, isLoading } = useDepositList(debouncedFilter);
 
   const {
     data: WithdrawCryptoInrCSV,
@@ -113,7 +113,7 @@ const DepositList = () => {
       header: "Amount",
       cell: (info) => info.getValue() || "--",
     }),
-    columnHelper.accessor("withdrawStatus", {
+    columnHelper.accessor("depositStatus", {
       header: "Status",
       cell: (info) => {
         let value = info.getValue() || "--";
@@ -135,7 +135,7 @@ const DepositList = () => {
         return (
           <Button
             onClick={() => {
-              navigate(`/withdraw-view`, {
+              navigate(`/deposit-view`, {
                 state: { withdrawDetail: row?.original },
               });
             }}
@@ -158,7 +158,7 @@ const DepositList = () => {
     setFilter,
     isLoading,
     table,
-    type: "withdrawCrypto",
+    type: "deposite",
     totalPage: formateData?.pages,
     filterData: {
       WithCryptoInrCSVData: formateData?.WithCryptoInrCSVData,
@@ -173,7 +173,7 @@ const DepositList = () => {
 
   return (
     <>
-      <BackComponent text="Withdraw List" />
+      <BackComponent text="Deposit List" />
       <CommonTable tableData={tableData} />
     </>
   );

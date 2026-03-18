@@ -68,4 +68,52 @@ export const useWithdrawList = ( filter: FilterType) => {
    
   });
 };
+export const fetchDepositList = async ( filter: FilterType) => {
+  try {
+    const response = await api({
+      url: `/admin/depositList`,
+      method: "GET",
+      params: {
+      
+     
+        search: filter?.search || undefined,
+        withdrawStatus:
+          filter?.filter === "Pending"
+            ? "PENDING"
+            : filter?.filter === "Verified"
+              ? "VERIFIED" 
+              : filter?.filter === "Rejected"
+              ? "REJECTED" 
+              :  filter?.filter,
+        // depositStatus: filter?.filter || undefined,
+        fromDate: filter?.fromDate
+          ? convertDataFormateForServer(filter?.fromDate)
+          : undefined,
+        toDate: filter?.toDate
+          ? convertDataFormateForServer(filter?.toDate)
+          : undefined,
+        limit: 10,
+        page: filter?.page || 1,
+      },
+    });
+    return response;
+  } catch (error: any) {
+    console.error("API error:", error);
+    return error?.response;
+  }
+};
+export const useDepositList = ( filter: FilterType) => {
+  return useQuery({
+    queryKey: ["depositList", filter],
+    queryFn: () => fetchDepositList( filter),
+    select(data) {
+      if (data?.data?.responseCode === 200) {
+        return data?.data?.result;
+      } else {
+        return null;
+      }
+    },
+   
+  });
+};
 

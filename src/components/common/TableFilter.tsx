@@ -194,6 +194,108 @@ const TableFilter: React.FC<TableFilterProps> = ({
           </Fragment>
         </div>
       )}
+      {type == "deposite" && (
+        <div className="w-full xl:w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid 2xl:grid-cols-5 gap-x-3.5 gap-y-3.5 space-x-3 space-y-3 sm:space-y-0">
+          <Fragment>
+            <div className="w-full">
+              <p className="text-gray-700 dark:text-gray-400">Search</p>
+              <div className="relative">
+                <button className="absolute -translate-y-1/2 left-4 top-1/2 text-gray-500 dark:text-gray-400">
+                  <Search />
+                </button>
+                <input
+                  value={filter?.search ? filter?.search : ""}
+                  type="text"
+                  placeholder="Search"
+                  className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 dark:border-gray-700 bg-transparent py-2.5 pl-12 pr-10 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10  dark:bg-white/[0.03] dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                  onChange={(e) => {
+                    setFilter((p: any) => ({
+                      ...p,
+                      page: 1,
+                      search: String(e.target.value),
+                    }));
+                    removeParamFn();
+                  }}
+                />
+              </div>
+            </div>
+
+         
+            <div className="w-full">
+              <DatePicker
+                id="from-date-picker"
+                label="From Date"
+                placeholder="DD/MM/YYYY"
+                key={`from-${datePickerKey}`}
+                defaultDate={filter.fromDate}
+                maxDate={filter.toDate ? filter.toDate : undefined}
+                onChange={(_, dateStr) => {
+                  if (
+                    filter.toDate &&
+                    parseDate(dateStr) > parseDate(filter.toDate)
+                  ) {
+                    setFilter((p: any) => ({
+                      ...p,
+                      page: 1,
+                      fromDate: dateStr,
+                      toDate: undefined,
+                    }));
+                  } else {
+                    setFilter((p: any) => ({
+                      ...p,
+                      page: 1,
+                      fromDate: dateStr,
+                    }));
+                  }
+                  removeParamFn();
+                }}
+              />
+            </div>
+
+            <div className="w-full">
+              <DatePicker
+                id="to-date-picker"
+                label="To Date"
+                placeholder="DD/MM/YYYY"
+                key={`to-${datePickerKey}`}
+                defaultDate={filter.toDate}
+                minDate={filter.fromDate ? filter.fromDate : undefined}
+                onChange={(_, dateStr) => {
+                  if (
+                    filter.fromDate &&
+                    parseDate(dateStr) < parseDate(filter.fromDate)
+                  ) {
+                    setFilter((p: any) => ({
+                      ...p,
+                      page: 1,
+                      toDate: dateStr,
+                      fromDate: undefined,
+                    }));
+                  } else {
+                    setFilter((p: any) => ({ ...p, page: 1, toDate: dateStr }));
+                  }
+                  removeParamFn();
+                }}
+              />
+            </div>
+
+            <div className=" w-full flex flex-col sm:flex-row space-y-3 sm:space-y-0 space-x-3">
+              <div className="w-full sm:min-w-40 flex items-end mt-4">
+                <Button
+                  className="w-full py-3"
+                  onClick={() => {
+                    setDatePickerKey((p) => p + 1);
+                    setFilter({});
+                    removeParamFn();
+                  }}
+                >
+                  Reset
+                </Button>
+              </div>
+            </div>
+          </Fragment>
+        </div>
+      )}
       {(type == "userList" || type == "feedbackList") && (
         <div className="w-full xl:w-[100%] grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 grid 2xl:grid-cols-5 gap-x-3.5 gap-y-3.5 space-x-3 space-y-3 sm:space-y-0">
           <Fragment>

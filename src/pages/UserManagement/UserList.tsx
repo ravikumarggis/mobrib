@@ -4,23 +4,17 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import Button from "../../components/ui/button/Button";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useMemo, useState } from "react";
 import CommonTable from "../../components/common/CommonTable";
 import { useNavigate } from "react-router";
-import {
-  useWithdrawCrypto,
-  useWithdrawList,
-} from "../../queries/deposit-management";
+
 import BackComponent from "../../components/backcomponent/BackComponent";
 import {
   DateTimeFormates,
-  OldNewUserTag,
   Pagination,
   statusColor,
   statusText,
-  TestRealUserType,
 } from "../../utils";
 import { useSetSearchParam } from "../../hooks/useSetSearchParam";
 import { useWithdrawCryptoInrCSV } from "../../queries/downloadCSV";

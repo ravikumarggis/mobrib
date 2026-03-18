@@ -9,10 +9,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useMemo, useState } from "react";
 import CommonTable from "../../components/common/CommonTable";
 import { useNavigate } from "react-router";
-import {
-  useWithdrawCrypto,
-  useWithdrawList,
-} from "../../queries/deposit-management";
+
 import BackComponent from "../../components/backcomponent/BackComponent";
 import {
   DateTimeFormates,
