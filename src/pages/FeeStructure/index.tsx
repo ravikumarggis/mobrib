@@ -1,5 +1,5 @@
-import {useMemo, useState } from "react";
-import { IndianRupee } from "lucide-react";
+import { useMemo, useState } from "react";
+import { IndianRupee, Percent } from "lucide-react";
 import { useGetFeeStructure, useUpdateFeeStructure } from "../../queries/fee";
 import Button from "../../components/ui/button/Button";
 import BackComponent from "../../components/backcomponent/BackComponent";
@@ -7,7 +7,7 @@ import LoadingScreen from "../../components/common/LoadingScreen";
 
 const FeeStructure = () => {
   const { data, isLoading } = useGetFeeStructure();
-  const { mutate: updateFee, isPending, } = useUpdateFeeStructure();
+  const { mutate: updateFee, isPending } = useUpdateFeeStructure();
 
   const [fees, setFees] = useState({
     withdrawFee: 0,
@@ -48,31 +48,27 @@ const FeeStructure = () => {
     updateFee(fees);
   };
 
-
-  if(isLoading || isPending) {
-    return <LoadingScreen/>
+  if (isLoading || isPending) {
+    return <LoadingScreen />;
   }
 
   return (
     <div className="w-full justify-center ">
-     
       <BackComponent text=" Fee Structure Management" />
 
       <div className="mt-4 justify-center items-center  rounded-xl shadow-md p-8 border border-gray-200 dark:border-gray-700 ">
-
         {isLoading ? (
           <p className="text-gray-500 dark:text-gray-400">Loading fees...</p>
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
               {/* Registration Fee */}
               <div>
                 <label className="block text-sm font-medium mb-2 dark:text-white">
-                  Registration Fee
+                  Withdraw Fee
                 </label>
                 <div className="relative">
-                  <IndianRupee
+                  <Percent
                     size={18}
                     className="absolute left-3 top-3 text-gray-400"
                   />
@@ -95,7 +91,7 @@ const FeeStructure = () => {
                   Task Commission Fee
                 </label>
                 <div className="relative">
-                  <IndianRupee
+                  <Percent
                     size={18}
                     className="absolute left-3 top-3 text-gray-400"
                   />
@@ -115,10 +111,10 @@ const FeeStructure = () => {
               {/* Cancellation Fee */}
               <div>
                 <label className="block text-sm font-medium mb-2 dark:text-gray-300">
-                  Cancellation Fee
+                  Task Cancellation Fee
                 </label>
                 <div className="relative">
-                  <IndianRupee
+                  <Percent
                     size={18}
                     className="absolute left-3 top-3 text-gray-400"
                   />
@@ -138,15 +134,13 @@ const FeeStructure = () => {
 
             {/* Update Button */}
             <div className="mt-8 flex justify-end">
-            
-                
-        <Button
-        className=" py-3"
-        onClick={handleSubmit}
+              <Button
+                className=" py-3"
+                onClick={handleSubmit}
                 disabled={isPending}
-      >
-         {isPending ? "Updating..." : "Update Fees"}
-      </Button>
+              >
+                {isPending ? "Updating..." : "Update Fees"}
+              </Button>
             </div>
           </>
         )}
