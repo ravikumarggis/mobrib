@@ -13,6 +13,13 @@ type FilterType = {
   isTestUser?: string;
 };
 
+
+export interface updateDisputePayload {
+  registrationFee: number;
+  taskCommissionFee: number;
+  cancellationFee: number;
+}
+
 export const fetchUserList = async (filter: FilterType) => {
   try {
     const response = await api({
@@ -79,5 +86,39 @@ export const useGetDispiteDetail = (id: string) => {
     queryKey: ["viewDispute", id],
     queryFn: () => handleGetFeeStructure(id), // ✅ return
     enabled: !!id,
+  });
+};
+
+
+const handleUpdateDispute = async (data: updateDisputePayload) => {
+  try {
+    const response = await api({
+      url: "/admin/updateDispute", // change if different
+      method: "POST",
+      data,
+    });
+
+    if (response?.data?.responseCode === 200) {
+      toast.success(response?.data?.responseMessage);
+      return response?.data;
+    } else {
+      throw new Error(response?.data?.responseMessage);
+    }
+  } catch (error: any) {
+    toast.error(error?.response?.data?.responseMessage || "Update failed");
+    throw error;
+  }
+};
+
+export const useUpdateDispute = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: updateDisputePayload) =>
+      handleUpdateDispute(data),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["FeeStructure"] });
+    },
   });
 };

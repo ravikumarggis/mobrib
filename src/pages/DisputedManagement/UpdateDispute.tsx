@@ -1,10 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { IndianRupee } from "lucide-react";
 import Button from "../../components/ui/button/Button";
 import BackComponent from "../../components/backcomponent/BackComponent";
 import LoadingScreen from "../../components/common/LoadingScreen";
+import { useUpdateDispute } from "../../queries/dispute";
+import { useLocation, useNavigate } from "react-router";
 
 const UpdateDispute = () => {
+
+    const location = useLocation();
+  const { state } = location.state || {};
+
+  const navigate = useNavigate()
+  
   const [action, setAction] = useState("");
 
   const [amounts, setAmounts] = useState({
@@ -13,16 +21,16 @@ const UpdateDispute = () => {
     fee: "",
   });
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { mutate: updateDispute, isPending } = useUpdateDispute();
 
   /* ==========================
      HANDLE AMOUNT CHANGE
   ========================== */
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmounts({
-      ...amounts,
+    setAmounts((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   /* ==========================
@@ -34,27 +42,39 @@ const UpdateDispute = () => {
       return;
     }
 
-    const payload: any = {
+    let payload: any = {
       action,
+      disputeId : state
     };
 
+    // 👉 Only send these fields for PARTIAL_PAYMENT
     if (action === "PARTIAL_PAYMENT") {
-      payload.posterAmount = Number(amounts.posterAmount);
-      payload.taskerAmount = Number(amounts.taskerAmount);
-      payload.fee = Number(amounts.fee);
+      payload = {
+        ...payload,
+        posterAmount: Number(amounts.posterAmount) || 0,
+        taskerAmount: Number(amounts.taskerAmount) || 0,
+        fee: Number(amounts.fee) || 0,
+      };
     }
 
-    console.log("Final Payload:", payload);
+  
 
-    // 👉 Call your API here
-    setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      alert("Submitted Successfully");
-    }, 1000);
+    updateDispute(payload, {
+      onSuccess: () => {
+        // ✅ Reset form after success
+        setAction("");
+        setAmounts({
+          posterAmount: "",
+          taskerAmount: "",
+          fee: "",
+        });
+        navigate("/dispute")
+        
+      },
+    });
   };
 
-  if (isSubmitting) {
+  if (isPending) {
     return <LoadingScreen />;
   }
 
@@ -170,8 +190,8 @@ const UpdateDispute = () => {
             SUBMIT BUTTON
         ========================== */}
         <div className="mt-8 flex justify-end">
-          <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting ? "Submitting..." : "Submit"}
+          <Button onClick={handleSubmit} disabled={isPending}>
+            {isPending ? "Submitting..." : "Submit"}
           </Button>
         </div>
 

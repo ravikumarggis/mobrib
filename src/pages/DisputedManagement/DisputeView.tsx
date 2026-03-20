@@ -9,6 +9,9 @@ const DisputeView: React.FC = () => {
   const { state } = location.state || {};
   const { data, isLoading } = useGetDispiteDetail(state?._id as string);
 
+
+
+  
   const navigate = useNavigate()
 
   return (
@@ -18,9 +21,13 @@ const DisputeView: React.FC = () => {
       <div className="w-full flex flex-col xl:px-40 mt-[5%]">
         {data?.disputeStatus == "Pending" && (
           <div className="flex justify-end items-end mb-4">
-            <button  onClick={() => {
-                navigate("/deposit-update");
-              }} className="flex items-center justify-center  px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
+            <button 
+              onClick={() => {
+                navigate?.(`/deposit-update`, {
+                  state: { state: state?._id },
+                });
+              }}
+              className="flex items-center justify-center  px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
               Update
             </button>
           </div>
