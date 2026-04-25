@@ -32,6 +32,7 @@ import DisputeView from "../pages/DisputedManagement/DisputeView";
 import DepositList from "../pages/DepositManagement";
 import DepositView from "../pages/DepositManagement/ViewDeposit";
 import UpdateDispute from "../pages/DisputedManagement/UpdateDispute";
+import ReportList from "../pages/ReportManagement";
 // import Ticket from "../pages/HelpSupport/Ticket";
 
 const routes: RouteObject[] = [
@@ -81,6 +82,7 @@ const routes: RouteObject[] = [
       { path: "/dispute", element: <DisputeList /> },
       { path: "/view-dispute", element: <DisputeView /> },
       { path: "/deposit-list", element: <DepositList /> },
+      { path: "/report-list", element: <ReportList /> },
       { path: "/deposit-view", element: <DepositView /> },
       { path: "/deposit-update", element: <UpdateDispute /> },
     ],

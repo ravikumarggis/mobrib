@@ -10,6 +10,7 @@ import { LiaUsersCogSolid } from "react-icons/lia";
 import {
   BiCalculator,
   BiDesktop,
+  BiNote,
   BiNotification,
   BiSupport,
   BiTask,
@@ -174,6 +175,13 @@ const navItems: NavItem[] = [
     icon: <BiDesktop />,
     name: "Dispute Management",
     path: "/dispute",
+    isRead: true,
+    isWrite: true,
+  },
+  {
+    icon: <BiNote />,
+    name: "Report Management",
+    path: "/report-list",
     isRead: true,
     isWrite: true,
   },
